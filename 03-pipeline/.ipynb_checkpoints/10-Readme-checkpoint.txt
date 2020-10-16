@@ -1,4 +1,4 @@
-1. read kubeflow metric page
+1. read kubeflow visualize page
 
 1-1. minio tensorboard bucket
 1-2. create secret
