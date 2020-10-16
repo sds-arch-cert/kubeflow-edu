@@ -1,0 +1,54 @@
+apiVersion: "kubeflow.org/v1alpha3"
+kind: Experiment
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"kubeflow.org/v1alpha3","kind":"Experiment","metadata":{"annotations":{},"labels":{"controller-tools.k8s.io":"1.0"},"name":"fashion-mnist-experiment-4","namespace":"kubeflow-inkook-kim"},"spec":{"algorithm":{"algorithmName":"random"},"maxFailedTrialCount":3,"maxTrialCount":4,"objective":{"additionalMetricNames":["accuracy","loss","Validation-loss"],"goal":0.99,"objectiveMetricName":"Validation-accuracy","type":"maximize"},"parallelTrialCount":2,"parameters":[{"feasibleSpace":{"max":"0.015","min":"0.005"},"name":"--learning_rate","parameterType":"double"},{"feasibleSpace":{"max":"0.9","min":"0.1"},"name":"--dropout_rate","parameterType":"double"}],"trialTemplate":{"goTemplate":{"rawTemplate":"apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: {{.Trial}}\n  namespace: {{.NameSpace}}\nspec:\n  template:\n    spec:\n      containers:\n      - name: {{.Trial}}\n        image: kubeflow-registry.default.svc.cluster.local:30000/katib-job:FFA85B38\n        command: \n        - \"python\"\n        - \"/app/fashion-mnist-katib.py\" \n        {{- with .HyperParameters}}\n        {{- range .}}\n        - \"{{.Name}}={{.Value}}\"\n        {{- end}}\n        {{- end}}\n        resources: # here\n          limits:\n            nvidia.com/gpu: 0\n      restartPolicy: Never"}}}}
+  creationTimestamp: "2020-07-12T01:21:16Z"
+  finalizers:
+  - update-prometheus-metrics
+  generation: 2
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: fashion-mnist-experiment-6
+  namespace: kubeflow-inkook-kim
+  selfLink: /apis/kubeflow.org/v1alpha3/namespaces/kubeflow-inkook-kim/experiments/fashion-mnist-experiment-4
+  uid: 487f04c0-9c11-43ee-a332-c94f26d45895
+spec:
+  algorithm:
+    algorithmName: random
+    algorithmSettings: null
+  maxFailedTrialCount: 3
+  maxTrialCount: 4
+  metricsCollectorSpec:
+    collector:
+      kind: StdOut
+  objective:
+    additionalMetricNames:
+    - accuracy
+    - loss
+    - Validation-loss
+    goal: 0.99
+    objectiveMetricName: Validation-accuracy
+    type: maximize
+  parallelTrialCount: 2
+  parameters:
+  - feasibleSpace:
+      max: "0.015"
+      min: "0.005"
+    name: --learning_rate
+    parameterType: double
+  - feasibleSpace:
+      max: "0.9"
+      min: "0.1"
+    name: --dropout_rate
+    parameterType: double
+  trialTemplate:
+    goTemplate:
+      rawTemplate: "apiVersion: batch/v1\nkind: Job\nmetadata:\n  name: {{.Trial}}\n
+        \ namespace: {{.NameSpace}}\nspec:\n  template:\n    spec:\n      containers:\n
+        \     - name: {{.Trial}}\n        image: kubeflow-registry.default.svc.cluster.local:30000/katib-job:FFA85B38\n
+        \       command: \n        - \"python\"\n        - \"/app/fashion-mnist-katib.py\"
+        \n        {{- with .HyperParameters}}\n        {{- range .}}\n        - \"{{.Name}}={{.Value}}\"\n
+        \       {{- end}}\n        {{- end}}\n        resources: # here\n          limits:\n
+        \           nvidia.com/gpu: 0\n      restartPolicy: Never"
