@@ -70,18 +70,17 @@ if __name__ == '__main__':
         from kubeflow.fairing.kubernetes import utils as k8s_utils
 
         DOCKER_REGISTRY = 'kubeflow-registry.default.svc.cluster.local:30000'
-#        DOCKER_REGISTRY = 'docker.io/alforik'
         fairing.config.set_builder(
             'append',
             image_name='katib-job', # here not fairing job but katib job
             base_image='brightfly/kubeflow-jupyter-lab:tf2.0-cpu',
             registry=DOCKER_REGISTRY, 
             push=True)
-        # cpu 2, memory 5GiB
+        # cpu 1, memory 5GiB
         fairing.config.set_deployer('job',
-                                    namespace='kubeflow-inkook-kim', # here
+                                    namespace='admin', # here
                                     pod_spec_mutators=[
-                                        k8s_utils.get_resource_mutator(cpu=2,  # here
+                                        k8s_utils.get_resource_mutator(cpu=1,  # here
                                                                        memory=5)]
          
                                    )
