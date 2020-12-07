@@ -1,0 +1,11 @@
+apiVersion: serving.kubeflow.org/v1alpha2
+kind: InferenceService
+metadata:
+  name: covid19         # KFServing InferenceService 명
+  namespace: kubeflow   # KFServing InferenceService가 배포될 Namespace
+spec:
+  default:
+    predictor:
+      serviceAccountName: kfserving-sa   # s3:// 레파지토리(Minio)를 사용하기 위해 이 KFServing InferenceService가 사용할 serviceAccount (Step1.에서 생성함)
+      tensorflow:
+        storageUri: 's3://model/covid/'  # 모델을 저장한 경로 s3://<bucket명>/<저장경로>

@@ -1,0 +1,66 @@
+apiVersion: "kubeflow.org/v1alpha3"
+kind: Experiment
+metadata:
+  namespace: myspace
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: covid19-experiment-1
+spec:
+  parameters:
+  - name: --learning_rate
+    parameterType: categorical
+    feasibleSpace:
+      list:
+      - '0.001'
+      - '0.0001'
+      - '0.0003'
+      - '0.00001'
+      - '0.00003'
+  - name: --dense
+    parameterType: int
+    feasibleSpace:
+      max: '200'
+      min: '50'
+      step: '10'
+  algorithm:
+    algorithmName: random
+    algorithmSettings:
+    - name: random_state
+      value: '42'
+  parallelTrialCount: 3
+  maxTrialCount: 6
+  maxFailedTrialCount: 3
+  objective:
+    additionalMetricNames:
+    - loss
+    - Validation-loss
+    - Validation-accuracy
+    goal: 99
+    objectiveMetricName: accuracy
+    type: minimize
+  trialTemplate:
+    goTemplate:
+        rawTemplate: |-
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: {{.Trial}}
+            namespace: {{.NameSpace}}
+          spec:
+            template:
+              spec:
+                containers:
+                - name: {{.Trial}}
+                  image: kubeflow-registry.default.svc.cluster.local:30000/covid19-katib-job:latest
+                  command:
+                  - "python3"
+                  - "/app/01-covid19-katib-train.py"
+                  {{- with .HyperParameters}}
+                  {{- range .}}
+                  - "{{.Name}}={{.Value}}"
+                  {{- end}}
+                  {{- end}}
+                  resources: # here gpu not use
+                    limits:
+                      nvidia.com/gpu: 0
+                restartPolicy: Never

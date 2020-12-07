@@ -1,0 +1,3 @@
+FROM kubeflow-registry.default.svc.cluster.local:30000/kf-base:latest
+COPY 01-covid19-katib-train.py /app/
+CMD ['python3', '/app/01-covid19-katib-train.py']

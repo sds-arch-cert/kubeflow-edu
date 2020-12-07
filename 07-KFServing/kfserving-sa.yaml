@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-secret    # Secret 명
+  namespace: kubeflow   # Secret이 설치될 Namespace
+  annotations:
+    serving.kubeflow.org/s3-endpoint: minio-service.kubeflow:9000  # 설치된 Minio 서비스 endpoint
+    serving.kubeflow.org/s3-usehttps: "0"   # http를 사용하지 않음 (설치된 Minio 설정)
+    serving.kubeflow.org/s3-verifyssl: "0"  # ssy verify 하지 않음 (설치된 Minio 설정)
+data:
+  awsAccessKeyID: bWluaW8=           # 문자열 "minio"를 base64 인코딩
+  awsSecretAccessKey: bWluaW8xMjM=   # 문자열 "minio123"를 base64 인코딩
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kfserving-sa    # ServiceAccount 명
+  namespace: kubeflow   # ServiceAccount가 설치될 Namespace
+secrets:
+- name: minio-secret    # 이 ServiceAccount가 사용할 Secret (위에서 생성한 Secret)
