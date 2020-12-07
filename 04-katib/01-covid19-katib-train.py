@@ -122,10 +122,10 @@ hist = model.fit(
     callbacks=[KatibMetricLog()]    
 )
 
-loss         = hist.history['loss']
-accuracy     = hist.history['accuracy']
-val_loss     = hist.history['val_loss']
-val_accuracy = hist.history['val_accuracy']
+loss         = hist.history['loss'][-1]
+accuracy     = hist.history['accuracy'][-1]
+val_loss     = hist.history['val_loss'][-1]
+val_accuracy = hist.history['val_accuracy'][-1]
 
 print(loss        )
 print(accuracy    )

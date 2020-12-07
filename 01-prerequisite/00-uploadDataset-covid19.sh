@@ -27,14 +27,7 @@ function mkBucket() {
 
 echo '
 ========================================
-Minio 레파지토리에 model bucet 생성
-----------------------------------------
-'
-mkBucket myminio/dataset/covid19
-
-echo '
-========================================
-mnist 데이터셋 다운로드
+Covid19 데이터셋 다운로드
 ----------------------------------------
 '
 rm -rf ./Covid19-X-Rays
@@ -42,13 +35,21 @@ git clone https://github.com/zhongli1990/Covid19-X-Rays.git
 
 echo '
 ========================================
-mnist 데이터셋을 Minio에 업로드
+Covid19 데이터셋을 Minio에 업로드
 ----------------------------------------
 '
+mkBucket myminio/dataset/covid19
 mc cp -r Covid19-X-Rays/all/ myminio/dataset/covid19/
 rm -rf ./Covid19-X-Rays
 
 echo
+echo '
+========================================
+Minio 레파지토리에 model bucet 생성
+----------------------------------------
+'
+mkBucket myminio/model/covid19
+
 echo '
 ========================================
 완료
