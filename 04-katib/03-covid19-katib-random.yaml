@@ -4,7 +4,7 @@ metadata:
   namespace: myspace
   labels:
     controller-tools.k8s.io: "1.0"
-  name: covid19-experiment-1
+  name: covid19-experiment-2
 spec:
   parameters:
   - name: --learning_rate
@@ -51,7 +51,7 @@ spec:
               spec:
                 containers:
                 - name: {{.Trial}}
-                  image: kubeflow-registry.default.svc.cluster.local:30000/covid19-katib-job:latest
+                  image: kubeflow-registry.default.svc.cluster.local:30000/covid19-katib-job:87E2A7A1
                   command:
                   - "python3"
                   - "/app/01-covid19-katib-train.py"

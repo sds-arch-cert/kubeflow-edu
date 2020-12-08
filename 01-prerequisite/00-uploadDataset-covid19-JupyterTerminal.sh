@@ -11,8 +11,14 @@ which mc || {
     sudo mv mc /usr/bin 
 }    
 
+# Jupyter Notebook의 Terminal에서 실행할 경우
 mc config host list myminio || \
 mc config host add myminio http://minio-service.kubeflow:9000 minio minio123
+
+# Host VM에서 실행할 경우
+# mc config host list myminio || \
+# mc config host add myminio http://minio-service.kubeflow:9000 minio minio123
+# mc config host add myminio http://localhost:32001 minio minio123
 
 : '
 ========================================
