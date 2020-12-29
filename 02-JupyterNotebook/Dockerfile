@@ -16,14 +16,19 @@ RUN pip install --upgrade --no-cache-dir pip
 RUN pip install --no-cache-dir enum34==1.1.8 
 
 RUN pip install --upgrade --no-cache-dir \
-                kubeflow-fairing \
-                msrestazure \
-                kubeflow-katib \
+                minio \
+                jupyterlab"<3.0.0"
+
+# 미리 설치 안 하면 kubeflow-fairing 설치 시 버전 꼬이는 듯 과도하게 시간 소요
+RUN pip install --upgrade --no-cache-dir \
+                boto3 google_cloud_storage cffi cryptography
+
+RUN pip install --upgrade --no-cache-dir \
                 kfp \
-                kfserving \
-                minio 
-# Kale 0.5.0에 맞추느라 jupyterlab 최신버전 포기
-#                jupyterlab 
+                kubeflow-katib \
+                kubeflow-fairing
+                # kfserving \
+                #msrestazure \
 
 RUN pip install --upgrade --no-cache-dir \
                 ipython-sql \
@@ -31,8 +36,7 @@ RUN pip install --upgrade --no-cache-dir \
                 scikit-learn \
                 opencv-python \
                 matplotlib \
-                seaborn \
-                imutils
+                seaborn 
 
 # https://github.com/lckr/jupyterlab-variableInspector
 RUN jupyter labextension install @lckr/jupyterlab_variableinspector
@@ -49,13 +53,15 @@ RUN pip install --upgrade --no-cache-dir jupyterlab-git && \
 
 # https://github.com/kubeflow-kale/kale.git
 # Kale-Katip 실행 문제로 버전 다운그레이드
-RUN pip install kubeflow-kale==0.5.0 && \
-    jupyter labextension install kubeflow-kale-labextension@0.5.0 --debug 
+# RUN pip install kubeflow-kale==0.5.0 && \
+#    jupyter labextension install kubeflow-kale-labextension@0.5.0 --debug 
+RUN pip install kubeflow-kale==0.5.1 && \
+   jupyter labextension install kubeflow-kale-labextension@0.5.1 --debug 
 # RUN pip install kubeflow-kale && \
 #     jupyter labextension install kubeflow-kale-labextension --debug 
 
 # 2.3.1에서 model save s3:// 문제 발생
-RUN pip install tensorflow==2.1.0
+# RUN pip install tensorflow==2.1.0
 
 # Bash를 기본 쉘로
 ENV SHELL /bin/bash

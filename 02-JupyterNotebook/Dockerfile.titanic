@@ -1,4 +1,4 @@
-FROM reddiana/jupyterlab-kale:latest
+FROM docker.io/reddiana/jupyterlab-kale:latest
 
 USER root
 
