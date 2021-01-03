@@ -58,7 +58,8 @@ if __name__ == '__main__':
         
         fairing.config.set_builder(
             'append',
-            base_image=f'{PRIVATE_REGISTRY}/kf-base:latest', # 사전준비에서 마련한 Base Image
+            # base_image = f'{PRIVATE_REGISTRY}/kf-base:latest', # 사전준비에서 마련한 Base Image
+            base_image = 'tensorflow/tensorflow:2.0.3-gpu-py3',
             registry = PRIVATE_REGISTRY,
             image_name='my-04-notebook-single-file-fairing-job', 
             push=True
