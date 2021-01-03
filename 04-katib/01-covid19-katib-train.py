@@ -17,7 +17,7 @@ import io
 from PIL import Image
 
 from minio import Minio
-from minio.error import ResponseError
+# from minio.error import ResponseError
 import argparse
 
 from tensorflow.python.keras.callbacks import Callback
