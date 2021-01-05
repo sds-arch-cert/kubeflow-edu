@@ -49,7 +49,8 @@ minikube start \
   --extra-config=apiserver.service-account-issuer=api \
   --extra-config=apiserver.service-account-signing-key-file=/var/lib/minikube/certs/apiserver.key \
   --extra-config=apiserver.service-account-api-audiences=api \
-  --kubernetes-version v1.15.2   
+  --kubernetes-version v1.15.2
+  # --kubernetes-version v1.16.15
   
 echo '
 =================================
@@ -170,17 +171,29 @@ cat /etc/hosts
 
 echo '
 =================================
-완료
+alias 및 자동완성 추가
 ---------------------------------
 '
+apt install -y bash-completion
 
 cat << EOF >> /etc/bash.bashrc
+
 set -o vi
+
 alias d='docker'
 alias k='kubectl'
 alias kw='watch "kubectl get pod -A"'
 alias kww='watch "kubectl get pod -A | grep -v Running"'
+
+source <(kubectl completion bash)
+complete -F __start_kubectl k
 EOF
+
+echo '
+=================================
+완료
+---------------------------------
+'
 
 sleep 10
 watch "kubectl get pod -A | grep -v Running"  
