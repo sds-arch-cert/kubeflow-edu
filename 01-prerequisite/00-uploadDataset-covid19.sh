@@ -12,7 +12,7 @@ which mc || {
 }    
 
 # Jupyter Notebook의 Terminal에서 실행할 경우
-mc config host list myminio || \
+mc config host list myminio 2&> /dev/null || \
 mc config host add myminio http://minio-service.kubeflow:9000 minio minio123
 
 # Host VM에서 실행할 경우
@@ -26,7 +26,7 @@ Minio 레파지토리에 bucet 생성 함수
 ----------------------------------------
 '
 function mkBucket() {
-    mc rm -r --force $1
+    # mc rm -r --force $1
     # mc rb $1
     mc ls $1 || mc mb $1
 }
