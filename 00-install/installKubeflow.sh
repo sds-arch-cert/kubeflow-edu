@@ -185,6 +185,7 @@ alias k='kubectl'
 alias kw='watch "kubectl get pod -A"'
 alias kww='watch "kubectl get pod -A | grep -v Running"'
 
+source /etc/bash_completion
 source <(kubectl completion bash)
 complete -F __start_kubectl k
 EOF
