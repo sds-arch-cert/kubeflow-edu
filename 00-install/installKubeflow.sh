@@ -174,5 +174,13 @@ echo '
 ---------------------------------
 '
 
+cat << EOF >> /etc/bash.bashrc
+set -o vi
+alias d='docker'
+alias k='kubectl'
+alias kw='watch "kubectl get pod -A"'
+alias kww='watch "kubectl get pod -A | grep -v Running"'
+EOF
+
 sleep 10
 watch "kubectl get pod -A | grep -v Running"  
