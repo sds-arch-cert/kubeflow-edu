@@ -39,14 +39,13 @@ RUN pip install --no-cache-dir \
         dill">=0.3, <0.4" \
         kubernetes">= 11.0.0, <12.0.0" 
 
+RUN pip install --upgrade --no-cache-dir \
+                jupyterlab">=2.0.0, <2.2.9"
+
 RUN pip install --no-deps --no-cache-dir kubeflow-kale==0.6.0 && \
     jupyter labextension install kubeflow-kale-labextension@0.6.0 --debug 
 
-
 RUN pip install --upgrade --no-cache-dir \
-                minio \
-                jupyterlab">=2.0.0, <2.2.9"  && \
-    pip install --upgrade --no-cache-dir \
                 kubeflow-katib \
                 kubeflow-fairing  
 
@@ -59,10 +58,10 @@ RUN pip install --upgrade --no-cache-dir \
                 seaborn 
 
 # https://github.com/lckr/jupyterlab-variableInspector
-RUN jupyter labextension install @lckr/jupyterlab_variableinspector
+# RUN jupyter labextension install @lckr/jupyterlab_variableinspector
 
 # https://github.com/jupyterlab/jupyterlab-toc
-RUN jupyter labextension install @jupyterlab/toc 
+# RUN jupyter labextension install @jupyterlab/toc 
 
 # https://github.com/deshaw/jupyterlab-execute-time
 # RUN jupyter labextension install jupyterlab-execute-time
