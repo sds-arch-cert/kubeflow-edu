@@ -1,5 +1,5 @@
 #!/bin/bash
-IMG=reddiana/jupyterlab-kale:as-pod
+IMG=reddiana/jupyterlab-kale:as-pod-from-git
 KANIKO_POD=kaniko-$(date +'%H%M-%S')-$(uuidgen | cut -b -8)
 echo $KANIKO_POD
 
@@ -12,19 +12,15 @@ spec:
   containers:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
-    args: ["--dockerfile=/workspace/Dockerfile",
-           "--context=dir://workspace",
+    args: ["--dockerfile=Dockerfile",
+           "--context=https://github.com/sds-arch-cert/kubeflow-edu.git",
+           "--context-sub-path=/03-fairing/99-kaniko",
            "--destination=${IMG}"]
     volumeMounts:
-      - name: dockerfile-storage
-        mountPath: /workspace
       - name: docker-config
         mountPath: /kaniko/.docker
   restartPolicy: Never
   volumes:
-    - name: dockerfile-storage
-      persistentVolumeClaim:
-        claimName: dockerfile-claim
     - name: docker-config
       projected:
         sources:
