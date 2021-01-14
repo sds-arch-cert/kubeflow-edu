@@ -1,5 +1,5 @@
 #!/bin/bash
-IMG=reddiana/jupyterlab-kale:0114-1505
+IMG=reddiana/jupyterlab-kale:as-pod
 KANIKO_POD=kaniko-$(date +'%H%M-%S')-$(uuidgen | cut -b -8)
 echo $KANIKO_POD
 
