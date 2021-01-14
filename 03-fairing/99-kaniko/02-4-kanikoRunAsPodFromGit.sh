@@ -13,7 +13,7 @@ spec:
   - name: kaniko
     image: gcr.io/kaniko-project/executor:latest
     args: ["--dockerfile=Dockerfile",
-           "--context=https://github.com/sds-arch-cert/kubeflow-edu.git",
+           "--context=git://github.com/sds-arch-cert/kubeflow-edu.git",
            "--context-sub-path=/03-fairing/99-kaniko",
            "--destination=${IMG}"]
     volumeMounts:
