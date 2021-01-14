@@ -19,7 +19,7 @@ spec:
     volumeMounts:
       - name: docker-config
         mountPath: /kaniko/.docker
-  restartPolicy: Never
+  restartPolicy: OnFailure # Never로 하면 initialize pods with istio-proxy 하는 경우 에러. https://github.com/GoogleContainerTools/kaniko/issues/753#issuecomment-592580847
   volumes:
     - name: docker-config
       projected:
