@@ -1,0 +1,12 @@
+{
+  "display_name": "elyra-gcp-demo",
+  "metadata": {
+    "api_endpoint": "http://130.211.242.76:31380/pipeline",
+    "cos_endpoint": "http://130.211.242.76:32001/minio",
+    "cos_username": "minio",
+    "cos_password": "minio123",
+    "cos_bucket": "elyra",
+    "tags": []
+  },
+  "schema_name": "kfp"
+}
