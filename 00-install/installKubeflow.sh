@@ -1,5 +1,13 @@
 #!/bin/bash
 
+minikube stop 
+minikube delete
+
+# https://github.com/kubernetes/kubernetes/releases
+K8S_VER=v1.19.7
+#K8S_VER=v1.16.15
+#K8S_VER=v1.15.2
+
 echo '
 =================================
 도커 설치
@@ -25,7 +33,7 @@ kubectl 설치
 mkdir -p ~/kubeflow
 cd ~/kubeflow
 
-curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.15.0/bin/linux/amd64/kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$K8S_VER/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 
@@ -34,6 +42,7 @@ echo '
 minikube 설치
 ---------------------------------
 '
+apt install conntrack
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 install minikube-linux-amd64 /usr/local/bin/minikube
 
@@ -49,8 +58,7 @@ minikube start \
   --extra-config=apiserver.service-account-issuer=api \
   --extra-config=apiserver.service-account-signing-key-file=/var/lib/minikube/certs/apiserver.key \
   --extra-config=apiserver.service-account-api-audiences=api \
-  --kubernetes-version v1.15.2
-  # --kubernetes-version v1.16.15
+  --kubernetes-version $K8S_VER
   
 echo '
 =================================
@@ -81,14 +89,18 @@ mkdir -p $KF_HOME
 cd $KF_HOME
 
 rm -f ./kfctl*
-wget https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
+# https://github.com/kubeflow/kfctl/releases
+# wget https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
 # wget https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
+wget https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
 tar -xvf kfctl_*.tar.gz	
 
 export PATH=$PATH:$KF_HOME
 export KF_DIR=${KF_HOME}/${KF_NAME}
+# https://github.com/kubeflow/manifests/tree/master/kfdef
 export CONFIG_URI=https://github.com/kubeflow/manifests/raw/master/kfdef/kfctl_k8s_istio.v1.0.2.yaml
 # export CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.v1.1.0.yaml
+# export CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.v1.2.0.yaml
 mkdir -p ${KF_DIR}
 cd ${KF_DIR}
 kfctl apply -V -f ${CONFIG_URI}
@@ -190,11 +202,17 @@ source <(kubectl completion bash)
 complete -F __start_kubectl k
 EOF
 
+# https://github.com/derailed/k9s/releases
+wget https://github.com/derailed/k9s/releases/download/v0.24.2/k9s_Linux_x86_64.tar.gz
+tar xzf k9s_Linux_x86_64.tar.gz
+mv -f k9s /usr/bin
+
 echo '
 =================================
 완료
 ---------------------------------
 '
 
-sleep 10
-watch "kubectl get pod -A | grep -v Running"  
+k9s -n kubeflow
+# sleep 10
+# watch "kubectl get pod -A | grep -v Running"  
