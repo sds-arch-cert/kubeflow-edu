@@ -90,9 +90,9 @@ cd $KF_HOME
 
 rm -f ./kfctl*
 # https://github.com/kubeflow/kfctl/releases
-# wget https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
+wget https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
 # wget https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
-wget https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
+# wget https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
 tar -xvf kfctl_*.tar.gz	
 
 export PATH=$PATH:$KF_HOME
@@ -213,6 +213,7 @@ echo '
 ---------------------------------
 '
 
-k9s -n kubeflow
 # sleep 10
+read
+k9s -n kubeflow
 # watch "kubectl get pod -A | grep -v Running"  

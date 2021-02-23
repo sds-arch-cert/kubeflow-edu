@@ -15,11 +15,6 @@ RUN pip install --upgrade --no-cache-dir pip
 # enum 최신 버전이 kfp 등에서 설치 에러 발생시킴
 RUN pip install --no-cache-dir enum34==1.1.8 keyrings.alt
 
-# https://github.com/kubeflow-kale/kale.git
-# Kale-Katip 실행 문제로 버전 다운그레이드
-# RUN pip install --no-cache-dir kubeflow-kale==0.5.0 && \
-#     jupyter labextension install kubeflow-kale-labextension@0.5.0 --debug 
-
 RUN pip install --upgrade --no-cache-dir \
                 jupyterlab">=2.0.0, <2.2.9"  
 
@@ -43,10 +38,10 @@ RUN pip install --upgrade --no-cache-dir \
                 imutils
 
 # https://github.com/lckr/jupyterlab-variableInspector
-# RUN jupyter labextension install @lckr/jupyterlab_variableinspector
+RUN jupyter labextension install @lckr/jupyterlab_variableinspector
 
 # https://github.com/jupyterlab/jupyterlab-toc
-# RUN jupyter labextension install @jupyterlab/toc 
+RUN jupyter labextension install @jupyterlab/toc 
 
 # https://github.com/deshaw/jupyterlab-execute-time
 # RUN jupyter labextension install jupyterlab-execute-time
@@ -56,18 +51,8 @@ RUN pip install --upgrade --no-cache-dir \
 #     jupyter lab build --debug
 
 # https://github.com/elyra-ai/elyra/
-# RUN pip install --no-cache-dir "elyra==0.10.3" && \
 RUN pip install --no-cache-dir "elyra<2.0.0" && \
     jupyter lab build --debug
-
-# https://github.com/kubeflow-kale/kale.git
-# Kale-Katip 실행 문제로 버전 다운그레이드
-# RUN pip install kubeflow-kale==0.5.0 && \
-#    jupyter labextension install kubeflow-kale-labextension@0.5.0 --debug 
-# RUN pip install kubeflow-kale==0.5.1 && \
-#   jupyter labextension install kubeflow-kale-labextension@0.5.1 --debug 
-# RUN pip install kubeflow-kale && \
-#     jupyter labextension install kubeflow-kale-labextension --debug 
 
 # 2.3.1에서 model save s3:// 문제 발생
 RUN pip install tensorflow==2.1.0
