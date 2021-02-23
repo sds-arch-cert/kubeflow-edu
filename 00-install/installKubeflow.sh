@@ -8,6 +8,17 @@ K8S_VER=v1.19.7
 #K8S_VER=v1.16.15
 #K8S_VER=v1.15.2
 
+# https://github.com/kubeflow/kfctl/releases
+KFCTL_DOWNLOSF=https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
+# KFCTL_DOWNLOSF=https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
+# KFCTL_DOWNLOSF=https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
+
+# https://github.com/kubeflow/manifests/tree/master/kfdef
+# CONFIG_URI=https://github.com/kubeflow/manifests/raw/master/kfdef/kfctl_k8s_istio.v1.0.2.yaml
+CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/v1.2-branch/kfdef/kfctl_k8s_istio.v1.0.2.yaml
+# CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.v1.1.0.yaml
+# CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.v1.2.0.yaml
+
 echo '
 =================================
 도커 설치
@@ -90,17 +101,11 @@ cd $KF_HOME
 
 rm -f ./kfctl*
 # https://github.com/kubeflow/kfctl/releases
-wget https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
-# wget https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
-# wget https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
+wget $KFCTL_DOWNLOSF
 tar -xvf kfctl_*.tar.gz	
 
 export PATH=$PATH:$KF_HOME
 export KF_DIR=${KF_HOME}/${KF_NAME}
-# https://github.com/kubeflow/manifests/tree/master/kfdef
-export CONFIG_URI=https://github.com/kubeflow/manifests/raw/master/kfdef/kfctl_k8s_istio.v1.0.2.yaml
-# export CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.v1.1.0.yaml
-# export CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/master/kfdef/kfctl_k8s_istio.v1.2.0.yaml
 mkdir -p ${KF_DIR}
 cd ${KF_DIR}
 kfctl apply -V -f ${CONFIG_URI}
