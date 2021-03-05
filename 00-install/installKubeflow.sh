@@ -5,18 +5,6 @@ minikube delete
 
 # https://www.kubeflow.org/docs/started/k8s/overview/
 
-# |          | v1.0.2 | v1.1.0 | v1.2.0 |
-# | -------- | ------ | ------ | ------ |
-# | v1.15.2  | O      | X1     | X1     |
-# | v1.16.15 |        | X1     | X1     |
-# | v1.17.17 |        | X1     | X1     |
-# | v1.18.16 |        | X2     | X2     |
-# | v1.19.7  |        | X2     | X1     |
-# | v1.20.4  |        |        | X      |
-#
-# X1: 컨테이너로그: Envoy proxy is NOT ready: config not received from Pilot
-# X2: 설치로그: Encountered error applying application cert-manager
-
 # https://github.com/kubernetes/kubernetes/releases
 #K8S_VER=v1.15.2
 K8S_VER=v1.16.15
@@ -83,10 +71,12 @@ sysctl fs.protected_regular=0
 
 minikube start \
   --driver=none \
+  --extra-config=apiserver.service-account-issuer=api \
+  --extra-config=apiserver.service-account-signing-key-file=/var/lib/minikube/certs/sa.key \
+  --extra-config=apiserver.service-account-api-audiences=api \
   --kubernetes-version $K8S_VER
-  #--extra-config=apiserver.service-account-issuer=api \
+  # https://github.com/kubeflow/kubeflow/issues/5447#issuecomment-773400533
   #--extra-config=apiserver.service-account-signing-key-file=/var/lib/minikube/certs/apiserver.key \
-  #--extra-config=apiserver.service-account-api-audiences=api \
   
 echo '
 =================================
