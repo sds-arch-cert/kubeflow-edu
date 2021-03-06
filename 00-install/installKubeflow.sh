@@ -1,8 +1,18 @@
 #!/bin/bash
 
+echo '
+=================================
+기존 minikube 제거
+---------------------------------
+'
 minikube stop 
 minikube delete
 
+echo '
+=================================
+설치버전 및 환경변수 설정
+---------------------------------
+'
 # https://www.kubeflow.org/docs/started/k8s/overview/
 
 # https://github.com/kubernetes/kubernetes/releases
@@ -23,6 +33,33 @@ CONFIG_URI=https://github.com/kubeflow/manifests/raw/master/distributions/kfdef/
 #KFCTL_DOWNLOSF=https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
 #KFCTL_DOWNLOSF=https://github.com/kubeflow/kfctl/releases/download/v1.1.0/kfctl_v1.1.0-0-g9a3621e_linux.tar.gz
 KFCTL_DOWNLOSF=https://github.com/kubeflow/kfctl/releases/download/v1.2.0/kfctl_v1.2.0-0-gbc038f9_linux.tar.gz
+
+INC_S=s-inc-u8xe42b1
+INC_E=e-inc-u8xe42b1
+
+echo '
+=================================
+alias 및 자동완성 추가
+---------------------------------
+'
+apt install -y bash-completion
+
+sed -i "/${INC_S}/,/${INC_E}/d" /etc/bash.bashrc
+cat << EOBRC >> /etc/bash.bashrc
+
+#=============<${INC_S}>=============
+set -o vi
+
+alias d='docker'
+alias k='kubectl'
+alias kw='watch "kubectl get pod -A"'
+alias kww='watch "kubectl get pod -A | grep -v Running"'
+
+source /etc/bash_completion
+source <(kubectl completion bash)
+complete -F __start_kubectl k
+#-------------<${INC_E}>-------------
+EOBRC
 
 echo '
 =================================
@@ -53,6 +90,11 @@ curl -LO https://storage.googleapis.com/kubernetes-release/release/$K8S_VER/bin/
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 
+# https://github.com/derailed/k9s/releases
+wget https://github.com/derailed/k9s/releases/download/v0.24.2/k9s_Linux_x86_64.tar.gz
+tar xzf k9s_Linux_x86_64.tar.gz
+mv -f k9s /usr/bin
+
 echo '
 =================================
 minikube 설치
@@ -76,7 +118,9 @@ minikube start \
   --extra-config=apiserver.service-account-api-audiences=api \
   --kubernetes-version $K8S_VER
   # https://github.com/kubeflow/kubeflow/issues/5447#issuecomment-773400533
-  #--extra-config=apiserver.service-account-signing-key-file=/var/lib/minikube/certs/apiserver.key \
+  #--extra-config=apiserver.service-account-signing-key-file=/var/lib/minikube/certs/apiserver.key 
+
+[[ $? -eq 0 ]] || exit
   
 echo '
 =================================
@@ -117,6 +161,8 @@ export KF_DIR=${KF_HOME}/${KF_NAME}
 mkdir -p ${KF_DIR}
 cd ${KF_DIR}
 kfctl apply -V -f ${CONFIG_URI}
+
+[[ $? -eq 0 ]] || exit
 
 echo '
 =================================
@@ -189,36 +235,11 @@ status:
   loadBalancer: {}
 EO_REGISTRY_SVC
 
-cat << EO_HOSTS >> /etc/hosts
-127.0.0.1	 kubeflow-registry.default.svc.cluster.local
+REGISTRY_URL="kubeflow-registry.default.svc.cluster.local"
+grep "127.0.0.1.*${REGISTRY_URL}" /etc/hosts > /dev/null
+[[ $? -eq 0 ]] || cat << EO_HOSTS >> /etc/hosts
+127.0.0.1	${REGISTRY_URL}
 EO_HOSTS
-cat /etc/hosts
-
-echo '
-=================================
-alias 및 자동완성 추가
----------------------------------
-'
-apt install -y bash-completion
-
-cat << EOF >> /etc/bash.bashrc
-
-set -o vi
-
-alias d='docker'
-alias k='kubectl'
-alias kw='watch "kubectl get pod -A"'
-alias kww='watch "kubectl get pod -A | grep -v Running"'
-
-source /etc/bash_completion
-source <(kubectl completion bash)
-complete -F __start_kubectl k
-EOF
-
-# https://github.com/derailed/k9s/releases
-wget https://github.com/derailed/k9s/releases/download/v0.24.2/k9s_Linux_x86_64.tar.gz
-tar xzf k9s_Linux_x86_64.tar.gz
-mv -f k9s /usr/bin
 
 echo '
 =================================
@@ -226,7 +247,5 @@ echo '
 ---------------------------------
 '
 
-# sleep 10
-read
+read -p "Press Enter..."
 k9s -n kubeflow
-# watch "kubectl get pod -A | grep -v Running"  
