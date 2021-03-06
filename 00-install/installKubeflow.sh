@@ -137,6 +137,11 @@ K8s 대쉬보드 설치
 minikube addons enable dashboard 
 minikube addons enable metrics-server
 
+kubectl patch svc -n kubernetes-dashboard kubernetes-dashboard --type='json' -p '[
+	{"op":"replace","path":"/spec/type",            "value":"NodePort"},
+	{"op":"replace","path":"/spec/ports/0/nodePort","value":30003}
+]'
+
 echo '
 =================================
 Kubeflow 설치
@@ -162,7 +167,14 @@ mkdir -p ${KF_DIR}
 cd ${KF_DIR}
 kfctl apply -V -f ${CONFIG_URI}
 
+# 설치 오류 발생하면 종료한다
 [[ $? -eq 0 ]] || exit
+
+kubectl patch svc -n kubeflow minio-service --type='json' -p '[
+	{"op":"replace","path":"/spec/type",            "value":"NodePort"},
+	{"op":"replace","path":"/spec/ports/0/nodePort","value":32001}
+]'
+
 
 echo '
 =================================
