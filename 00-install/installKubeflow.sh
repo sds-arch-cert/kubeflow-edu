@@ -69,9 +69,12 @@ echo '
 apt-get update
 apt-get install -y docker.io
 
+REGISTRY_URL="kubeflow-registry.default.svc.cluster.local"
+REGISTRY_PORT=30000
+
 cat << EO_DOCKER_DAEMON > /etc/docker/daemon.json
 {
-        "insecure-registries": ["kubeflow-registry.default.svc.cluster.local:30000"]
+        "insecure-registries": ["${REGISTRY_URL}:${REGISTRY_PORT}"]
 }
 EO_DOCKER_DAEMON
 
@@ -235,10 +238,10 @@ metadata:
 spec:
   ports:
   - name: registry
-    port: 30000
+    port: ${REGISTRY_PORT}
     protocol: TCP
     targetPort: 5000
-    nodePort: 30000
+    nodePort: ${REGISTRY_PORT}
   selector:
     run: kubeflow-registry
   sessionAffinity: None
@@ -247,7 +250,6 @@ status:
   loadBalancer: {}
 EO_REGISTRY_SVC
 
-REGISTRY_URL="kubeflow-registry.default.svc.cluster.local"
 grep "127.0.0.1.*${REGISTRY_URL}" /etc/hosts > /dev/null
 [[ $? -eq 0 ]] || cat << EO_HOSTS >> /etc/hosts
 127.0.0.1	${REGISTRY_URL}
