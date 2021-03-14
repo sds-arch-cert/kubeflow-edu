@@ -1,0 +1,52 @@
+apiVersion: kubeflow.org/v1
+kind: TFJob
+metadata:
+  name: mnist-tfjob-dist
+spec:
+  tfReplicaSpecs:
+    Chief:
+      replicas: 1
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+          name: mnist-mytfjob-mychief
+        spec:
+          containers:
+          - command:
+            - python
+            - mnist-dist.py
+            image: sds.redii.net/mlopsdev/tmp:mnist-tf-0.2
+            name: tensorflow
+            volumeMounts:
+            - mountPath: /data
+              name: data-volume
+            workingDir: /app
+          restartPolicy: Never
+          volumes:
+          - name: data-volume
+            persistentVolumeClaim:
+              claimName: mnist-tfjob-data-volume
+    Worker:
+      replicas: 2
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+          name: mnist-mytfjob-myworker
+        spec:
+          containers:
+          - command:
+            - python
+            - mnist-dist.py
+            image: sds.redii.net/mlopsdev/tmp:mnist-tf-0.2
+            name: tensorflow
+            volumeMounts:
+            - mountPath: /data
+              name: data-volume
+            workingDir: /app
+          restartPolicy: Never
+          volumes:
+          - name: data-volume
+            persistentVolumeClaim:
+              claimName: mnist-tfjob-data-volume
