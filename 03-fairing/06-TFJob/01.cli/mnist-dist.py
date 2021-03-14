@@ -39,9 +39,9 @@ print(f"cluster=[{cluster}] job_name=[{job_name}] task_index=[{task_index}]")
 
 BATCH_SIZE = 64
 
-tb_dir = '/data/logs'
+tb_dir = './logs'
 
-mnist = tfds.builder('mnist', data_dir='/data/dataset')
+mnist = tfds.builder('mnist', data_dir='./dataset')
 mnist.download_and_prepare()
 
 mnist_train, mnist_test = mnist.as_dataset(
