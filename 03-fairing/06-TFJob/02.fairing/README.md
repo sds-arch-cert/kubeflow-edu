@@ -10,4 +10,5 @@
 
 ## 실행
 - tfjob-fairing.ipynb 실행
-- K8s에서 TFJob / Pod 확인    
+- K8s에서 TFJob / Pod 확인
+  - TFJob의 description을 확인하여 TFJob manifest 내용을 확인한다
