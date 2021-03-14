@@ -51,7 +51,7 @@ spec:
               spec:
                 containers:
                 - name: {{.Trial}}
-                  image: kubeflow-registry.default.svc.cluster.local:30000/covid19-katib-job:latest
+                  image: registry.kube-system.svc.cluster.local:30000/covid19-katib-job:latest
                   command:
                   - "python3"
                   - "/app/01-covid19-katib-train.py"
