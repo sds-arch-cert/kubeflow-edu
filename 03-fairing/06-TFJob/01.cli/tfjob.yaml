@@ -18,15 +18,15 @@ spec:
             - mnist-dist.py
             image: registry.kube-system.svc.cluster.local:30000/mytfjob
             name: tensorflow
-            volumeMounts:
-            - mountPath: /data
-              name: data-volume
+            #volumeMounts:
+            #- mountPath: /data
+            #  name: data-volume
             workingDir: /app
           restartPolicy: Never
-          volumes:
-          - name: data-volume
-            persistentVolumeClaim:
-              claimName: mnist-tfjob-data-volume
+          #volumes:
+          #- name: data-volume
+          #  persistentVolumeClaim:
+          #    claimName: mnist-tfjob-data-volume
     Worker:
       replicas: 2
       template:
@@ -41,12 +41,12 @@ spec:
             - mnist-dist.py
             image: registry.kube-system.svc.cluster.local:30000/mytfjob
             name: tensorflow
-            volumeMounts:
-            - mountPath: /data
-              name: data-volume
+            #volumeMounts:
+            #- mountPath: /data
+            #  name: data-volume
             workingDir: /app
           restartPolicy: Never
-          volumes:
-          - name: data-volume
-            persistentVolumeClaim:
-              claimName: mnist-tfjob-data-volume
+          #volumes:
+          #- name: data-volume
+          #  persistentVolumeClaim:
+          #    claimName: mnist-tfjob-data-volume

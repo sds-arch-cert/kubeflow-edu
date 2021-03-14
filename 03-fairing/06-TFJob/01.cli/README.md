@@ -11,6 +11,6 @@
 ## 실행
 - Jupyter Notebook Terminal에서도 실행 가능
     ```bash
-    kubectl apply -f tfjob.yaml
+    kubectl apply -n myspace -f tfjob.yaml
     ```
 - K8s에서 TFJob / Pod 확인    
