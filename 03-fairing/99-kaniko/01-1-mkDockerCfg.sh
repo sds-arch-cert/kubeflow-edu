@@ -5,7 +5,7 @@ AUTH=$(echo -n "${DOCKER_USERNAME}:${DOCKER_PASSWORD}" | base64)
 cat << EOF > dockerConfig.json
 {
     "auths": {
-        "https://index.docker.io/v1/": {
+        "sds.redii.net": {
             "auth": "${AUTH}"
         }
     }

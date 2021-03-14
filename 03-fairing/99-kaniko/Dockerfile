@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:2.1.0-py3
+FROM sds.redii.net/mlopsdev/tensorflow:latest-py3
 
 RUN mkdir -p /app
 ADD mnist.py /app/

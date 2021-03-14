@@ -1,5 +1,5 @@
 #!/bin/bash
-WD=/root/kubeflow-edu/03-fairing/99-kaniko
+WD=`pwd`
 kubectl apply -f - << EOPV
 apiVersion: v1
 kind: PersistentVolume

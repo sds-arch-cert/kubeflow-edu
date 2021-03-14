@@ -5,48 +5,60 @@ function helpMsg() {
   cat << EOU
 
 Usage:
-  $ME [flags]
+  $ME [flags] [build-context]
 
 Flags:
-  --dockerfile    Path to the dockerfile to be built. (default "Dockerfile")
-  --git-url       Gti url to download and to be the dockerfile build context.
-  --git-sub-path  Sub path within the given context.
-  --destination   Registry the final image should be pushed to.
+  -f,     --dockerfile      Path to the dockerfile to be built. (optional, default: "Dockerfile")
+  -c,     --build-context   path to be the dockerfile build context. (optional, default: ".")
+  -d, -t, --destination     Registry the final image should be pushed to.
+          --redii-id        sds.redii.net id
+          --redii-pw        sds.redii.net passpord of id
 
 Example:
   $ME \\
-    --dockerfile=Dockerfile \\
-    --git-url=git://github.com/sds-arch-cert/kubeflow-edu.git \\
-    --git-sub-path=/03-fairing/99-kaniko \\
-    --destination=reddiana/jupyterlab-kale:0.0.1
+    -f=Dockerfile \\
+    -t=sds.redii.net/mlopsdev/tmp:test \\
+    --redii-id=myid \\
+    --redii-pw=mypassword \\
+    ./dockerBuildSample
 
 EOU
 }
 
+
+# default value
 DOCKERFILE="Dockerfile"
+CONTEXT=.
 
 for i in "$@"
 do
   case $i in
-    --dockerfile=*)
+    -f=*|--dockerfile=* )
         DOCKERFILE="${i#*=}"
         shift 
         ;;
-    --git-url=*)
+    [^-]*) 
+        CONTEXT=${1}
+        shift
+        ;;
+    -c=*|--build-context=*)
         CONTEXT="${i#*=}"
         shift
         ;;
-    --git-sub-path=*)
-        CONTEXT_SUB_PATH="${i#*=}"
-        shift
-        ;;
-    --destination=*)
+    -t=*|-d=*|--destination=*)
         DESTINATION_IMG="${i#*=}"
         shift
         ;;
+    --redii-id=*)
+        REDII_ID="${i#*=}"
+        shift
+        ;;
+    --redii-pw=*)
+        REDII_PW="${i#*=}"
+        shift
+        ;;
     --help)
-        echo $USAGE
-	helpMsg
+        helpMsg
         exit
         ;;
     *)
@@ -55,61 +67,89 @@ do
   esac
 done
 
-KANIKO_POD=kaniko-$(date +'%H%M-%S')-$(uuidgen | cut -b -8)
-
-[[ $CONTEXT =~ ^git ]] || {
-  echo '
-ERROR: git-url scheme should be "git://"
-' 
-  helpMsg
-  exit
-}
-
 # TODO argument validation
+
+which uuidgen > /dev/null || sudo apt-get install uuid-runtime || exit
+
+UUID=$(date +'%H%M-%S')-$(uuidgen | cut -b -8)
+KANIKO_POD=kaniko-${UUID}
+DOCKER_SECRET=redii-${UUID}
 
 echo "
 
-DOCKERFILE: ${DOCKERFILE}
-CONTEXT: ${CONTEXT}
-CONTEXT_SUB_PATH: ${CONTEXT_SUB_PATH}
-DESTINATION_IMG: ${DESTINATION_IMG}
-KANIKO_POD: $KANIKO_POD
+DST_IMG    : ${DESTINATION_IMG}
+DOCKERFILE : ${CONTEXT}/${DOCKERFILE}
+CONTEXT    : ${CONTEXT}
 
 "
 
-SCRT="regcred"
-kubectl get secrets ${SCRT}
+kubectl create secret docker-registry ${DOCKER_SECRET} \
+            --docker-server=sds.redii.net \
+            --docker-username=${REDII_ID} \
+            --docker-password=${REDII_PW} 
 
-kubectl apply -f - << EOK
-apiVersion: v1
-kind: Pod
-metadata:
-  name: ${KANIKO_POD}
-spec:
-  containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
-    args: ["--dockerfile=${DOCKERFILE}",
-           "--context=${CONTEXT}",
-           "--context-sub-path=${CONTEXT_SUB_PATH}",
-           "--destination=${DESTINATION_IMG}"]
-    volumeMounts:
-      - name: docker-config
-        mountPath: /kaniko/.docker
-  restartPolicy: OnFailure # Never로 하면 initialize pods with istio-proxy 하는 경우 에러. https://github.com/GoogleContainerTools/kaniko/issues/753#issuecomment-592580847
-  volumes:
-    - name: docker-config
-      projected:
-        sources:
-        - secret:
-            name: ${SCRT}
-            items:
-              - key: .dockerconfigjson
-                path: config.json
-EOK
+KANIKO_EXECUTOR=sds.redii.net/mlopsdev/kaniko-executor:debug
+read -r -d '' MANIFEST << EOF
+{
+  "apiVersion":"v1",
+  "kind":"Pod",
+  "metadata":{
+    "name":"${KANIKO_POD}",
+    "annotations": {
+        "sidecar.istio.io/inject": "false"  
+    }
+  },
+  "spec":{
+    "containers":[
+      {
+        "name":"kaniko",
+        "image":"${KANIKO_EXECUTOR}",
+        "stdin":true,
+        "stdinOnce":true,
+        "args":[
+          "--dockerfile=${DOCKERFILE}",
+          "--context=tar://stdin",
+          "--destination=${DESTINATION_IMG}"
+        ],
+        "volumeMounts":[
+          {
+            "name":"docker-config",
+            "mountPath":"/kaniko/.docker"
+          }
+        ]
+      }
+    ],
+    "volumes":[
+      {
+        "name":"docker-config",
+        "projected":{
+          "sources":[
+            {
+              "secret":{
+                "name":"${DOCKER_SECRET}",
+                "items":[
+                  {
+                    "key":".dockerconfigjson",
+                    "path":"config.json"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+EOF
 
-kubectl wait --for=condition=ContainersReady pod/${KANIKO_POD} --timeout=180s
-kubectl logs -f ${KANIKO_POD} kaniko
+tar -czf - -C ${CONTEXT} . | kubectl run ${KANIKO_POD} \
+    --generator=run-pod/v1 \
+    --rm \
+    --stdin=true \
+    --image=${KANIKO_EXECUTOR} \
+    --restart=Never \
+    --overrides="${MANIFEST}"
 
-kubectl wait --for=condition=ContainersReady=false pod/${KANIKO_POD} --timeout=1800s
-kubectl delete pod/${KANIKO_POD}
+kubectl delete secret/${DOCKER_SECRET}
+

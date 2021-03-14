@@ -1,5 +1,5 @@
 #!/bin/bash
-IMG=reddiana/jupyterlab-kale:as-pod
+IMG=sds.redii.net/mlopsdev/tmp:as-pod
 KANIKO_POD=kaniko-$(date +'%H%M-%S')-$(uuidgen | cut -b -8)
 echo $KANIKO_POD
 
@@ -11,7 +11,7 @@ metadata:
 spec:
   containers:
   - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
+    image: sds.redii.net/mlopsdev/kaniko-executor:latest
     args: ["--dockerfile=/workspace/Dockerfile",
            "--context=dir://workspace",
            "--destination=${IMG}"]
