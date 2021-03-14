@@ -5,7 +5,7 @@
 # VM에서 실행해주세요.
 
 REGISTRY=registry.kube-system.svc.cluster.local:30000
-IMG=mybase
+IMG=mymnistbase
 
 docker build -t ${REGISTRY}/${IMG} .
 docker push ${REGISTRY}/${IMG}
