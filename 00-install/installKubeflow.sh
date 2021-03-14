@@ -87,8 +87,8 @@ echo '
 kubectl 설치
 ---------------------------------
 '
-mkdir -p ~/kubeflow
-cd ~/kubeflow
+mkdir -p /tmp/kf-edu
+cd /tmp/kf-edu
 
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$K8S_VER/bin/linux/amd64/kubectl
 chmod +x ./kubectl
