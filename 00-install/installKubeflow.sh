@@ -69,12 +69,13 @@ echo '
 apt-get update
 apt-get install -y docker.io
 
-REGISTRY_URL="kubeflow-registry.default.svc.cluster.local"
+# REGISTRY_URL="kubeflow-registry.default.svc.cluster.local"
+REGISTRY_URL="registry.kube-system.svc.cluster.local"
 REGISTRY_PORT=30000
 
 cat << EO_DOCKER_DAEMON > /etc/docker/daemon.json
 {
-        "insecure-registries": ["${REGISTRY_URL}:${REGISTRY_PORT}"]
+    "insecure-registries": ["${REGISTRY_URL}:${REGISTRY_PORT}"]
 }
 EO_DOCKER_DAEMON
 
@@ -133,24 +134,39 @@ echo '
 ufw disable  
   
 echo '
-=================================
-K8s 대쉬보드 설치
----------------------------------
+====================================
+K8s 대쉬보드 / Private Registry 설치
+------------------------------------
 '
 minikube addons enable dashboard 
 minikube addons enable metrics-server
+minikube addons enable registry
 
+# 대쉬보드 서비스 nodePort로 노출
 kubectl patch svc -n kubernetes-dashboard kubernetes-dashboard --type='json' -p '[
 	{"op":"replace","path":"/spec/type",            "value":"NodePort"},
 	{"op":"replace","path":"/spec/ports/0/nodePort","value":30003}
 ]'
+
+# Private Registry 서비스 nodePort로 노출
+kubectl patch svc -n kube-system registry --type='json' -p '[
+	{"op":"replace","path":"/spec/type",            "value":"NodePort"},
+	{"op":"replace","path":"/spec/ports/0/nodePort","value":'${REGISTRY_PORT}'},
+	{"op":"replace","path":"/spec/ports/0/port",    "value":'${REGISTRY_PORT}'}
+]'
+
+# hosts 파일에 Private Registry 추가 (kubelet이 사용을 위함)
+grep "127.0.0.1.*${REGISTRY_URL}" /etc/hosts > /dev/null
+[[ $? -eq 0 ]] || cat << EO_HOSTS >> /etc/hosts
+127.0.0.1	${REGISTRY_URL}
+EO_HOSTS
 
 echo '
 =================================
 Kubeflow 설치
 ---------------------------------
 '
-export KF_HOME=~/kubeflow
+export KF_HOME=/tmp/kubeflow
 export KF_NAME=sds-kubeflow
 
 rm -rf ${KF_HOME}
@@ -159,9 +175,7 @@ mkdir -p $KF_HOME
 cd $KF_HOME
 
 rm -f ./kfctl*
-# https://github.com/kubeflow/kfctl/releases
 wget $KFCTL_DOWNLOSF
-#tar -xvf kfctl_*.tar.gz	
 tar -xvf $(basename $KFCTL_DOWNLOSF)
 
 export PATH=$PATH:$KF_HOME
@@ -173,87 +187,11 @@ kfctl apply -V -f ${CONFIG_URI}
 # 설치 오류 발생하면 종료한다
 [[ $? -eq 0 ]] || exit
 
+# Minio 서비스 nodePort로 노출
 kubectl patch svc -n kubeflow minio-service --type='json' -p '[
 	{"op":"replace","path":"/spec/type",            "value":"NodePort"},
 	{"op":"replace","path":"/spec/ports/0/nodePort","value":32001}
 ]'
-
-
-echo '
-=================================
-Private Registry 설치
----------------------------------
-'
-cat << EO_REGISTRY_DEPLOY | kubectl apply -f -
-apiVersion: extensions/v1beta1
-kind: Deployment
-metadata:
-  annotations:
-    deployment.kubernetes.io/revision: "1"
-  generation: 1
-  labels:
-    run: kubeflow-registry
-  name: kubeflow-registry
-  namespace: default
-spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 10
-  selector:
-    matchLabels:
-      run: kubeflow-registry
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        run: kubeflow-registry
-    spec:
-      containers:
-      - image: registry:2
-        imagePullPolicy: IfNotPresent
-        name: kubeflow-registry
-        resources: {}
-        terminationMessagePath: /dev/termination-log
-        terminationMessagePolicy: File
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      securityContext: {}
-      terminationGracePeriodSeconds: 30
-EO_REGISTRY_DEPLOY
-
-cat << EO_REGISTRY_SVC | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    run: kubeflow-registry
-  name: kubeflow-registry
-  namespace: default
-spec:
-  ports:
-  - name: registry
-    port: ${REGISTRY_PORT}
-    protocol: TCP
-    targetPort: 5000
-    nodePort: ${REGISTRY_PORT}
-  selector:
-    run: kubeflow-registry
-  sessionAffinity: None
-  type: NodePort
-status:
-  loadBalancer: {}
-EO_REGISTRY_SVC
-
-grep "127.0.0.1.*${REGISTRY_URL}" /etc/hosts > /dev/null
-[[ $? -eq 0 ]] || cat << EO_HOSTS >> /etc/hosts
-127.0.0.1	${REGISTRY_URL}
-EO_HOSTS
 
 echo '
 =================================
