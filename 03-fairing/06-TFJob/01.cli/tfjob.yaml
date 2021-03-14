@@ -16,7 +16,7 @@ spec:
           - command:
             - python
             - mnist-dist.py
-            image: sds.redii.net/mlopsdev/tmp:mnist-tf-0.2
+            image: registry.kube-system.svc.cluster.local:30000/mytfjob
             name: tensorflow
             volumeMounts:
             - mountPath: /data
@@ -39,7 +39,7 @@ spec:
           - command:
             - python
             - mnist-dist.py
-            image: sds.redii.net/mlopsdev/tmp:mnist-tf-0.2
+            image: registry.kube-system.svc.cluster.local:30000/mytfjob
             name: tensorflow
             volumeMounts:
             - mountPath: /data
