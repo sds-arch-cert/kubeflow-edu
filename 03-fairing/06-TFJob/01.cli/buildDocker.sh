@@ -5,6 +5,11 @@
 # VM에서 실행해주세요.
 
 REGISTRY=registry.kube-system.svc.cluster.local:30000
+IMG=mytfjob
 
-docker build -t ${REGISTRY}/mytfjob .
-docker push ${REGISTRY}/mytfjob
+docker build -t ${REGISTRY}/${IMG} .
+docker push ${REGISTRY}/${IMG}
+
+# 레지스트리 확인
+curl http://${REGISTRY}/v2/_catalog
+curl http://${REGISTRY}/v2/${IMG}/tags/list
