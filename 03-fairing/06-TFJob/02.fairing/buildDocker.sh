@@ -5,12 +5,12 @@
 # VM에서 실행해주세요.
 
 #REGISTRY=registry.kube-system.svc.cluster.local:30000
-IMG=mymnistbase
+IMG=mybase
 #TAG=${REGISTRY}/${IMG}
-TAG=${IMG}
+TAG=reddiana/${IMG}
 
 docker build -t ${TAG} .
-# docker push ${TAG}
+docker push ${TAG}
 
 # 레지스트리 확인
 # curl http://${REGISTRY}/v2/_catalog
