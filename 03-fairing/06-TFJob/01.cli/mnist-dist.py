@@ -25,6 +25,10 @@ def decode_image(example, feature):
 
 print("TensorFlow version: ", tf.__version__)
 
+strategy = tf.distribute.experimental.MultiWorkerMirroredStrategy()
+options = tf.data.Options()
+options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.OFF
+
 tf_config = os.environ.get('TF_CONFIG', '{}')
 print(f"TF_CONFIG [{tf_config}]")
 tf_config_json = json.loads(tf_config)
@@ -35,9 +39,9 @@ print(f"cluster=[{cluster}] job_name=[{job_name}] task_index=[{task_index}]")
 
 BATCH_SIZE = 64
 
-tb_dir = './logs'
+tb_dir = '/data/logs'
 
-mnist = tfds.builder('mnist', data_dir='./dataset')
+mnist = tfds.builder('mnist', data_dir='/data/dataset')
 mnist.download_and_prepare()
 
 mnist_train, mnist_test = mnist.as_dataset(
@@ -48,10 +52,6 @@ mnist_train, mnist_test = mnist.as_dataset(
 train_input_dataset = mnist_train.cache().repeat().shuffle(buffer_size=50000).batch(BATCH_SIZE)
 # eval_input_dataset = mnist_test.cache().repeat().batch(BATCH_SIZE)
 
-strategy = tf.distribute.experimental.MultiWorkerMirroredStrategy()
-
-options = tf.data.Options()
-options.experimental_distribute.auto_shard_policy = tf.data.experimental.AutoShardPolicy.OFF
 train_input_dataset = train_input_dataset.with_options(options)
 
 # https://www.tensorflow.org/guide/keras/custom_callback

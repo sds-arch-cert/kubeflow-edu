@@ -2,7 +2,7 @@
 ## 사전준비
 1. Jupyter Notebook 생성 시, Data Volume 마운트
   - Data Volumes > [+ADD VOLUME] 클릭
-    - Name: PVC mnist-tfjob-data-volume
+    - Name: mnist-tfjob-data-volume
     - Mode: ReadWriteMany
     - Mount Point: /data
 1. Dataset 준비
