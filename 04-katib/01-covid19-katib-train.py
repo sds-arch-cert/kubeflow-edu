@@ -65,7 +65,7 @@ labels = []
 
 # read all X-Rays in the specified path, and resize them all to 256x256
 
-for i in minioClient.list_objects('dataset', prefix='covid19', recursive=True):
+for i in minioClient.list_objects('dataset', prefix='covid-19', recursive=True):
     label = i.object_name.split(os.path.sep)[-2]
     minioObj = minioClient.get_object('dataset', i.object_name)
     byteArray = minioObj.read()

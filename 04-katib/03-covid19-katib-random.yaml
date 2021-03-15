@@ -1,9 +1,7 @@
-apiVersion: "kubeflow.org/v1alpha3"
+apiVersion: "kubeflow.org/v1beta1"
 kind: Experiment
 metadata:
   namespace: myspace
-  labels:
-    controller-tools.k8s.io: "1.0"
   name: covid19-experiment-1
 spec:
   parameters:
@@ -37,7 +35,7 @@ spec:
     - Validation-accuracy
     goal: 99
     objectiveMetricName: accuracy
-    type: minimize
+    type: maximize
   trialTemplate:
     goTemplate:
         rawTemplate: |-

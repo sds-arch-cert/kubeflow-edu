@@ -44,17 +44,10 @@ echo '
 Covid19 데이터셋을 Minio에 업로드
 ----------------------------------------
 '
-mkBucket myminio/dataset/covid19
-mc cp -r Covid19-X-Rays/all/ myminio/dataset/covid19/
+mkBucket myminio/dataset/covid-19
+mc cp -r Covid19-X-Rays/all/ myminio/dataset/covid-19/
 rm -rf ./Covid19-X-Rays
 
-echo
-echo '
-========================================
-Minio 레파지토리에 model bucet 생성
-----------------------------------------
-'
-mkBucket myminio/model/covid19
 
 echo '
 ========================================
