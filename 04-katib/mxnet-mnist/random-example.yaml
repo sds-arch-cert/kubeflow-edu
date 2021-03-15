@@ -50,10 +50,13 @@ spec:
       kind: Job
       spec:
         template:
+          metadata:
+            annotations:
+              sidecar.istio.io/inject: "false"
           spec:
             containers:
               - name: training-container
-                image: docker.io/kubeflowkatib/mxnet-mnist:v1beta1-c6c9172
+                image: reddiana/katib-mxnet-mnist
                 command:
                   - "python3"
                   - "/opt/mxnet-mnist/mnist.py"
