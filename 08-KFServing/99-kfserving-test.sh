@@ -1,4 +1,4 @@
-MODEL_NAME=covid19
+MODEL_NAME=covid-19
 # TEST_JSON="../01-prerequisite/image_data.json"
 TEST_JSON=$1
 

@@ -1,7 +1,7 @@
 apiVersion: serving.kubeflow.org/v1alpha2
 kind: InferenceService
 metadata:
-  name: covid19        # KFServing InferenceService 명
+  name: covid-19        # KFServing InferenceService 명
   namespace: myspace   # KFServing InferenceService가 배포될 Namespace
 spec:
   default:
