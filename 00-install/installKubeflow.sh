@@ -44,8 +44,8 @@ alias 및 자동완성 추가
 '
 apt install -y bash-completion
 
-sed -i "/${INC_S}/,/${INC_E}/d" /etc/bash.bashrc
-cat << EOBRC >> /etc/bash.bashrc
+sed -i "/${INC_S}/,/${INC_E}/d" ~/.bashrc
+cat << EOBRC >> ~/.bashrc
 
 #=============<${INC_S}>=============
 set -o vi
