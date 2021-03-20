@@ -1,9 +1,9 @@
 MODEL_NAME=covid-19
-# TEST_JSON="../01-prerequisite/image_data.json"
-TEST_JSON=$1
+TEST_JSON="../image_data.json"
+# TEST_JSON=$1
 
 # Jupyter Notebook Terminal (K8s 내부)에서 실행 시
-INGRESS_HOST=kfserving-ingressgateway.istio-system
+INGRESS_HOST=istio-ingressgateway.istio-system
 INGRESS_PORT=80
 
 # K8s 외부 실행 시
