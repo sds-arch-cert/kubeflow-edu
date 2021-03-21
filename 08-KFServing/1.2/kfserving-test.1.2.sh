@@ -8,7 +8,7 @@ INGRESS_PORT=80
 
 # K8s 외부 실행 시
 # INGRESS_HOST=<VM 외부 IP>
-# INGRESS_PORT=32380
+# INGRESS_PORT=31380
 
 SERVICE_HOSTNAME=$(kubectl get inferenceservice -n myspace $MODEL_NAME -o jsonpath='{.status.url}' | cut -d "/" -f 3)
 SERVING_URL=http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/$MODEL_NAME:predict
