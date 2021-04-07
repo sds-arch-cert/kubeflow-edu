@@ -1,20 +1,22 @@
 #!/bin/bash
-IMG=sds.redii.net/mlopsdev/tmp:as-pod-from-git
+IMG=reddiana/kanikotest
 KANIKO_POD=kaniko-$(date +'%H%M-%S')-$(uuidgen | cut -b -8)
 echo $KANIKO_POD
 
-kubectl apply --namespace=red-suh -f - << EOK
+kubectl apply --namespace=myspace -f - << EOK
 apiVersion: v1
 kind: Pod
 metadata:
   name: ${KANIKO_POD}
+  annotations:
+    sidecar.istio.io/inject: "false"
 spec:
   containers:
   - name: kaniko
-    image: sds.redii.net/mlopsdev/kaniko-executor:latest
+    image: gcr.io/kaniko-project/executor:debug
     args: ["--dockerfile=Dockerfile",
-           "--context=git://code.sdsdev.co.kr/reddiana/MLOpsSample.git",
-           "--context-sub-path=/03-fairing/99-kaniko",
+           "--context=git://github.com/sds-arch-cert/kubeflow-edu.git",
+           "--context-sub-path=/02-JupyterNotebook",
            "--destination=${IMG}"]
     volumeMounts:
       - name: docker-config
@@ -24,8 +26,6 @@ spec:
         value: "$1"
       - name: GIT_PASSWORD 
         value: "$2"
-  # restartPolicy: Never로 하면 initialize pods with istio-proxy 하는 경우 에러. 
-  # - https://github.com/GoogleContainerTools/kaniko/issues/753#issuecomment-592580847
   restartPolicy: OnFailure 
   volumes:
     - name: docker-config
@@ -38,8 +38,8 @@ spec:
                 path: config.json
 EOK
 
-kubectl wait --for=condition=ContainersReady -n red-suh pod/${KANIKO_POD} --timeout=60s
-kubectl logs -f -n red-suh ${KANIKO_POD} kaniko
+kubectl wait --for=condition=ContainersReady -n myspace pod/${KANIKO_POD} --timeout=60s
+kubectl logs -f -n myspace ${KANIKO_POD} kaniko
 
-kubectl wait --for=condition=ContainersReady=false -n red-suh pod/${KANIKO_POD} --timeout=1800s
-kubectl delete -n red-suh pod/${KANIKO_POD}
+kubectl wait --for=condition=ContainersReady=false -n myspace pod/${KANIKO_POD} --timeout=1800s
+kubectl delete -n myspace pod/${KANIKO_POD}
