@@ -77,6 +77,7 @@ REGISTRY_PORT=30000
 
 cat << EO_DOCKER_DAEMON > /etc/docker/daemon.json
 {
+    "storage-opts": [ "overlay2.size=20G" ],
     "insecure-registries": ["${REGISTRY_URL}:${REGISTRY_PORT}"]
 }
 EO_DOCKER_DAEMON
