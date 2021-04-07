@@ -1,9 +1,12 @@
 #!/bin/bash
 IMG=reddiana/kanikotest
 KANIKO_POD=kaniko-$(date +'%H%M-%S')-$(uuidgen | cut -b -8)
+#NAMESPACE=myspace
+NAMESPACE=default
+
 echo $KANIKO_POD
 
-kubectl apply --namespace=myspace -f - << EOK
+kubectl apply --namespace=${NAMESPACE} -f - << EOK
 apiVersion: v1
 kind: Pod
 metadata:
@@ -38,8 +41,8 @@ spec:
                 path: config.json
 EOK
 
-kubectl wait --for=condition=ContainersReady -n myspace pod/${KANIKO_POD} --timeout=60s
-kubectl logs -f -n myspace ${KANIKO_POD} kaniko
+kubectl wait --for=condition=ContainersReady -n ${NAMESPACE} pod/${KANIKO_POD} --timeout=60s
+kubectl logs -f -n ${NAMESPACE} ${KANIKO_POD} kaniko
 
-kubectl wait --for=condition=ContainersReady=false -n myspace pod/${KANIKO_POD} --timeout=1800s
-kubectl delete -n myspace pod/${KANIKO_POD}
+kubectl wait --for=condition=ContainersReady=false -n ${NAMESPACE} pod/${KANIKO_POD} --timeout=1800s
+kubectl delete -n ${NAMESPACE} pod/${KANIKO_POD}
