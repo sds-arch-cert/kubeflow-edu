@@ -1,0 +1,7 @@
+{
+    "auths": {
+        "http://minio-service.kubeflow:9000": {
+            "auth": "aGk6dGhlcmUK"
+        }
+    }
+}
