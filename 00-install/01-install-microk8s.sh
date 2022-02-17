@@ -20,7 +20,7 @@ sudo apt install docker.io -y
 
 # microk8s 설치
 # snap 으로 Kubernetes 1.21 버전의 microk8s 를 설치합니다.
-# sudo snap install microk8s --classic --channel=${KUBE_VERSION}
+sudo snap install microk8s --classic --channel=${KUBE_VERSION}
 
 
 # admin group 에 사용자 계정 추가
