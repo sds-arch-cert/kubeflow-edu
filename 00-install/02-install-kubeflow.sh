@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# 사용자 계정 환경변수 설정
+DEX_USERNAME=admin
+DEX_PASSWORD=P@sswd12
+MINIO_ACCESS_KEY=minio
+MINIO_SECRET_KEY=P@sswd12
+MINIO_CONSOLE_NODEPORT=30318
+
+
 # microk8s 추가 addon 설치
 # kubeflow 설치를 위해 microk8s 에 dns 와 storage, private image registry 를 구성합니다.
 microk8s enable dns storage registry
@@ -31,12 +39,6 @@ echo kubeflow deploy 가 완료되었습니다. 하지만 Kubernetes 에 완전�
 echo watch -c juju status --color
 
 
-# 사용자 계정 환경변수 설정
-DEX_USERNAME=admin
-DEX_PASSWORD=P@sswd12
-MINIO_ACCESS_KEY=minio
-MINIO_SECRET_KEY=P@sswd12
-
 # kubeflow 사용자 계정 설정
 juju config dex-auth static-username=${DEX_USERNAME}
 juju config dex-auth static-password=${DEX_PASSWORD}
@@ -55,7 +57,6 @@ kubectl patch deployment -n kubeflow oidc-gatekeeper --type='json' -p='[{"op": "
 
 # minio node port 구성
 MINIO_CONSOLE_PORT=$(kubectl logs -n kubeflow minio-0 | grep -i 'console:' | rev | cut -d':' -f1 | rev | xargs)
-MINIO_CONSOLE_NODEPORT=30123
 
 kubectl apply -f - <<EOF
 apiVersion: v1
