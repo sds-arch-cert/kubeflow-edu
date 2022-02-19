@@ -114,4 +114,4 @@ echo '
 접속 port 및 계정
 ---------------------------------'
 echo kubeflow dashboard: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT} \( username: user@example.com password: 12341234 \)
-echo minio console: https://${DNS_NAME}:32001 \( username: minio password: minio123 \)
+echo minio console: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT}/minio \( username: minio password: minio123 \)
