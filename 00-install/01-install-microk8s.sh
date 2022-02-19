@@ -32,7 +32,7 @@ sudo apt install -y bash-completion
 sudo snap alias microk8s.kubectl kubectl
 sudo snap alias microk8s.kubectl k
 sudo snap alias microk8s.kubectl mk
-echo source <(mk completion bash | sed "s/kubectl/mk/g") >> ~/.bashrc
+#echo source <(mk completion bash | sed "s/kubectl/mk/g") >> ~/.bashrc
 
 
 echo 설정 적용을 위해 ssh console 을 재접속합니다.
