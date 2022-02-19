@@ -81,11 +81,30 @@ kubectl patch gateway -n kubeflow kubeflow-gateway --type='json' -p '[
 	{"op":"add", "path":"/spec/servers/1", "value":{"hosts":["*"], "port":{"name":"https", "number":443, "protocol":"HTTPS"}, "tls":{"credentialName":"kubeflow-tls","mode":"SIMPLE"}}}
 ]'
 
-# Minio 서비스 nodePort로 노출
-kubectl patch svc -n kubeflow minio-service --type='json' -p '[
-	{"op":"replace","path":"/spec/type",            "value":"NodePort"},
-	{"op":"replace","path":"/spec/ports/0/nodePort","value":32001}
-]'
+# Minio 접속용 virtual service 추가
+kubectl apply -f - << EOF
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: minio-web
+  namespace: kubeflow
+spec:
+  gateways:
+  - kubeflow-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        prefix: /minio
+    rewrite:
+      uri: /minio
+    route:
+    - destination:
+        host: minio-service.kubeflow.svc.cluster.local
+        port:
+          number: 9000
+EOF
 
 
 KUBEFLOW_DASHBOARD_PORT=$(kubectl get svc -n istio-system istio-ingressgateway -o yaml | grep 'port: 443$' -A 2 -B 2 | grep nodePort | cut -d':' -f2 | xargs)
