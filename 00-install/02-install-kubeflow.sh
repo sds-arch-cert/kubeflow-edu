@@ -46,7 +46,7 @@ kubeflow manifests 설치
 ---------------------------------'
 cd ~
 git clone https://github.com/kubeflow/manifests.git
-wget kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
+wget -O kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/v3.2.0/kustomize_3.2.0_linux_amd64
 chmod +x ~/kustomize
 
 cd manifests
@@ -113,5 +113,5 @@ echo '
 =================================
 접속 port 및 계정
 ---------------------------------'
-echo kubeflow dashboard: ${KUBEFLOW_DASHBOARD_PORT} \( username: user@example.com password: 12341234 \)
-echo minio console: 32001 \( username: minio password: minio123 \)
+echo kubeflow dashboard: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT} \( username: user@example.com password: 12341234 \)
+echo minio console: https://${DNS_NAME}:32001 \( username: minio password: minio123 \)
