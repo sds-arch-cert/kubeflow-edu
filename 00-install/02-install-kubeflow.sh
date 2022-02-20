@@ -24,6 +24,22 @@ fi
 
 echo '
 =================================
+private image registry insecure url 로 등록
+refer to https://microk8s.io/docs/registry-private
+---------------------------------'
+# for microk8s v1.3
+IMAGE_REGISTRY_DNS_NAME=myhost.local
+IMAGE_REGISTRY_PORT=32000
+IMAGE_REGISTRY_CONFIG=/var/snap/microk8s/current/args/containerd-template.toml
+
+if [ -z $(grep ${IMAGE_REGISTRY_DNS_NAME} ${IMAGE_REGISTRY_CONFIG}) ];
+then
+  echo '      [plugins."io.containerd.grpc.v1.cri".registry.mirrors."${IMAGE_REGISTRY_DNS_NAME}:${IMAGE_REGISTRY_PORT}"]' >> ${IMAGE_REGISTRY_CONFIG}
+  echo '        endpoint = ["http://localhost:32000"]' >> ${IMAGE_REGISTRY_CONFIG}
+fi
+
+echo '
+=================================
 microk8s 재기동
 ---------------------------------'
 
@@ -143,11 +159,12 @@ kubectl patch service -n auth dex --type='json' -p '[
 
 microk8s enable registry:size=40Gi
 
+
 echo '
 =================================
 접속 port 및 계정
 ---------------------------------'
 echo kubeflow dashboard: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT} \( username: user@example.com password: 12341234 \)
 echo minio console: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT}/minio \( username: minio password: minio123 \)
-echo image registry : http://${DNS_NAME}:32000
+echo image registry : http://${IMAGE_REGISTRY_DNS_NAME}:${IMAGE_REGISTRY_PORT}
 
