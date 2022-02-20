@@ -8,7 +8,7 @@ Minio Cli 설치
 which mc || {
     wget https://dl.min.io/client/mc/release/linux-amd64/mc && \
     chmod +x mc && \
-    sudo mv mc /usr/bin 
+    mv mc /usr/local/bin 
 }    
 
 # Jupyter Notebook의 Terminal에서 실행할 경우
