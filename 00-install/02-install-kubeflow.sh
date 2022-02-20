@@ -130,6 +130,18 @@ spec:
           number: 9000
 EOF
 
+echo '
+=================================
+image registry 추가
+---------------------------------'
+
+# dex service nodeport 제거
+kubectl patch service -n auth dex --type='json' -p '[
+        {"op":"remove", "path":"/spec/ports/0/nodePort"},
+	{"op":"replace", "path":"/spec/type", "value":"ClusterIP"}
+]'
+
+microk8s enable registry
 
 echo '
 =================================
@@ -137,3 +149,5 @@ echo '
 ---------------------------------'
 echo kubeflow dashboard: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT} \( username: user@example.com password: 12341234 \)
 echo minio console: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT}/minio \( username: minio password: minio123 \)
+echo image registry : http://${DNS_NAME}:32000
+
