@@ -81,6 +81,30 @@ kubectl patch gateway -n kubeflow kubeflow-gateway --type='json' -p '[
 	{"op":"add", "path":"/spec/servers/1", "value":{"hosts":["*"], "port":{"name":"https", "number":443, "protocol":"HTTPS"}, "tls":{"credentialName":"kubeflow-tls","mode":"SIMPLE"}}}
 ]'
 
+
+# istio-gateway nodeport 추가
+KUBEFLOW_DASHBOARD_PORT=32001
+kubectl apply -f - << EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: istio-gateway-extra-service
+  namespace: istio-system
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - name: https
+    nodePort: ${KUBEFLOW_DASHBOARD_PORT}
+    port: 443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: istio-ingressgateway
+    istio: ingressgateway
+  sessionAffinity: None
+  type: NodePort
+EOF
+
 # Minio 접속용 virtual service 추가
 kubectl apply -f - << EOF
 apiVersion: networking.istio.io/v1beta1
@@ -106,8 +130,6 @@ spec:
           number: 9000
 EOF
 
-
-KUBEFLOW_DASHBOARD_PORT=$(kubectl get svc -n istio-system istio-ingressgateway -o yaml | grep 'port: 443$' -A 2 -B 2 | grep nodePort | cut -d':' -f2 | xargs)
 
 echo '
 =================================
