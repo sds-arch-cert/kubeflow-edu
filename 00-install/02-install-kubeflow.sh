@@ -141,7 +141,7 @@ kubectl patch service -n auth dex --type='json' -p '[
 	{"op":"replace", "path":"/spec/type", "value":"ClusterIP"}
 ]'
 
-microk8s enable registry
+microk8s enable registry:size=40Gi
 
 echo '
 =================================
