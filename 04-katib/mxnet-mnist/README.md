@@ -1,6 +1,6 @@
 # Katib 실습
 
-원본: [katib/examples/v1beta1/mxnet-mnist at master · kubeflow/katib (github.com)](https://github.com/kubeflow/katib/tree/master/examples/v1beta1/mxnet-mnist)
+원본: [katib/examples/v1beta1/mxnet-mnist at master · kubeflow/katib (github.com)](https://github.com/kubeflow/katib/tree/master/examples/v1beta1/)
 
 #### Mxnet image classification example
 
@@ -16,13 +16,13 @@ If you want to read more about this example, visit official [incubator-mxnet](ht
 
 Katib을 실행할 로직을 Dockerizing.
 
-Docker Hub에 사전에 repository를 만들고 진행 (아래 예에서는 reddiana/katib-mxnet-mnist)
+Docker Hub에 사전에 repository를 만들거나 private image registry에서 진행 (아래 예에서는 myhost.local:32000/katib-mxnet-mnist)
 
 Jupyter notebook Terminal에서는 docker 명령을 실행할 수 없으므로 VM에서 실행한다.
 
 ```bash
-docker build -t reddiana/katib-mxnet-mnist .
-docker push reddiana/katib-mxnet-mnist
+sudo docker build -t myhost.local:32000/katib-mxnet-mnist .
+sudo docker push myhost.local:32000/katib-mxnet-mnist
 ```
 
 ## Experiment Manifest Yaml 수정
@@ -45,7 +45,7 @@ Katib을 실행할 로직이 Dockerzing 되어있는 Image로 수정 (아래 예
           spec:
             containers:
               - name: training-container
-                image: reddiana/katib-mxnet-mnist
+                image: myhost.local:32000/katib-mxnet-mnist
                 command:
                   ...생략...
 ```
@@ -58,7 +58,6 @@ Katib을 실행할 로직이 Dockerzing 되어있는 Image로 수정 (아래 예
 apiVersion: "kubeflow.org/v1beta1"
 kind: Experiment
 metadata:
-  namespace: myspace
   name: random-example
 spec:
   objective:       
@@ -92,39 +91,48 @@ Katib Experiment는 Istio sidecar injection 된 상태에서는 정상동작하�
 ## 방법1. kubectl apply
 
 ```bash
-kubectl apply -f random-example.yaml
+kubectl apply -f random-example.yaml -n <your namespace>
 ```
 
-## 방법2. Katib UI - YAML File
-
-- Kubeflow 포털 > Katib > Katib 햄버거메뉴 > HP > Submit > YAML File 탭
-  - Textarea에 random-example.yaml 내용을 복붙
-  - 화면 하단 DEPLOY 버튼 클릭
-
-## 방법3. Katib UI - Parameters
+## 방법2. Katib UI 
 
 - Kubeflow 포털 > Katib > Katib 햄버거메뉴 > Trial Manifests
-  - ADD TEMPLATE 클릭
-    - New ConfigMap 체크
-    - Namespace: myspace
-    - Name: my-new-trial-template
-    - Template ConfigMap Path: myTrialTemplate
-    - Textarea: random-example.yaml에서 trialSpec 하위 부분을 복붙
-- Kubeflow 포털 > Katib > Katib 햄버거메뉴 > HP > Submit > Parameters 탭
-  - Name: random-experiment-<중복 없도록 순번 등을 append> 
-  - Namespace: myspace
-  - Common Parameters, Objective, Algorithm, Parameters: random-example.yaml의 내용 참고
-  - Trial Template Spec
-    - ConfigMap Namespace and Name
-      - Namespace: myspace
-      - Name: my-new-trial-template
-    - Trial Template ConfigMap Path: myTrialTemplate
-    - 나머지: random-example.yaml의 내용 참고
-  - 화면 하단 DEPLOY 버튼 클릭
+- Kubeflow Dashboard > Experiments(AutoML) > NEW EXPERIMENT 
+
+1. Metadata
+  - Name: katib-mxnet-mnist-experiment
+2. Trial Thresholds: default
+3. Objective:
+  - Type: Maximize
+  - Metric: Validation-accuracy: 0.97
+    
+4. Search Algorithm
+  - Hyper Parameter Turning: Random 또는 Grid
+
+5. Early Stopping: default
+6. Hyper Parameters
+  - lr: default
+  - num-layers: 
+    - min: 2
+    - max: 5
+    - optimizer: default
+7. Metrics Collector: Stdout
+8. Trial Template
+  - Katib 로 실행할 Trial 을 설정하는 단계
+  - Source type: ConfigMap 
+    - YAML: Trial 의 YAML 을 직접 등록하여 사용
+    - ConfigMap: 미리 Trial Template 을 Configmap 에 등록한 경우 사용
+  - Trial Template YAML 의 변수를 6. Hyper parameters 단계 에서 설정한 값으로 입력
+    - learingRate: lr
+    - numberLayers: num-layers
+    - optimizer: optimizer
+
+CREATE 클릭하여 Katib 실행
+
 
 ## 실행 확인
 
-#### Katib UI > Monitoring
+#### Katib Dashbard
 
 #### Katib 관련 K8s resource dependencies 예
 
