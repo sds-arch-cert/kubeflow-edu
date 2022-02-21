@@ -35,7 +35,7 @@ IMAGE_REGISTRY_CONFIG=/var/snap/microk8s/current/args/containerd-template.toml
 if [ -z $(grep ${IMAGE_REGISTRY_DNS_NAME} ${IMAGE_REGISTRY_CONFIG}) ];
 then
   echo '      [plugins."io.containerd.grpc.v1.cri".registry.mirrors."${IMAGE_REGISTRY_DNS_NAME}:${IMAGE_REGISTRY_PORT}"]' >> ${IMAGE_REGISTRY_CONFIG}
-  echo '        endpoint = ["http://localhost:32000"]' >> ${IMAGE_REGISTRY_CONFIG}
+  echo '        endpoint = ["http://'${IMAGE_REGISTRY_DNS_NAME}':'${IMAGE_REGISTRY_PORT}'"]' >> ${IMAGE_REGISTRY_CONFIG}
 fi
 
 echo '
