@@ -68,6 +68,9 @@ chmod +x ~/kustomize
 cd manifests
 while ! ../kustomize build example | kubectl apply -f -; do echo "Retrying to apply resources"; sleep 10; done
 
+# pipeline for multiuser
+../kustomize build apps/pipeline/upstream/env/platform-agnostic-multi-user-pns | kubectl apply -f -
+
 
 echo '
 =================================
