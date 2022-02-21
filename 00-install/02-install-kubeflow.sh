@@ -178,4 +178,5 @@ echo '
 echo kubeflow dashboard: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT} \( username: user@example.com password: 12341234 \)
 echo minio console: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT}/minio \( username: minio password: minio123 \)
 echo image registry : http://${IMAGE_REGISTRY_DNS_NAME}:${IMAGE_REGISTRY_PORT}
+echo kubernetes dashboard : https://${DNS_NAME}:30003
 
