@@ -162,6 +162,17 @@ microk8s enable registry:size=40Gi
 
 echo '
 =================================
+대쉬보드 서비스 nodePort로 노출
+---------------------------------'
+
+kubectl patch svc -n kube-system kubernetes-dashboard --type='json' -p '[
+	{"op":"replace","path":"/spec/type",            "value":"NodePort"},
+	{"op":"replace","path":"/spec/ports/0/nodePort","value":30003}
+]'
+
+
+echo '
+=================================
 접속 port 및 계정
 ---------------------------------'
 echo kubeflow dashboard: https://${DNS_NAME}:${KUBEFLOW_DASHBOARD_PORT} \( username: user@example.com password: 12341234 \)
