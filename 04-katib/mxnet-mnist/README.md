@@ -100,32 +100,32 @@ kubectl apply -f random-example.yaml -n <your namespace>
 - Kubeflow Dashboard > Experiments(AutoML) > NEW EXPERIMENT 
 
 1. Metadata
-  - Name: katib-mxnet-mnist-experiment
+    - Name: katib-mxnet-mnist-experiment
 2. Trial Thresholds: default
 3. Objective:
-  - Type: Maximize
-  - Metric: Validation-accuracy: 0.97
+    - Type: Maximize
+    - Metric: Validation-accuracy: 0.97
     
 4. Search Algorithm
-  - Hyper Parameter Turning: Random 또는 Grid
+    - Hyper Parameter Turning: Random 또는 Grid
 
 5. Early Stopping: default
 6. Hyper Parameters
-  - lr: default
-  - num-layers: 
-    - min: 2
-    - max: 5
-    - optimizer: default
+    - lr: default
+    - num-layers: 
+      - min: 2
+      - max: 5
+      - optimizer: default
 7. Metrics Collector: Stdout
 8. Trial Template
-  - Katib 로 실행할 Trial 을 설정하는 단계
-  - Source type: ConfigMap 
-    - YAML: Trial 의 YAML 을 직접 등록하여 사용
-    - ConfigMap: 미리 Trial Template 을 Configmap 에 등록한 경우 사용
-  - Trial Template YAML 의 변수를 6. Hyper parameters 단계 에서 설정한 값으로 입력
-    - learingRate: lr
-    - numberLayers: num-layers
-    - optimizer: optimizer
+    - Katib 로 실행할 Trial 을 설정하는 단계
+    - Source type: ConfigMap 
+      - YAML: Trial 의 YAML 을 직접 등록하여 사용
+      - ConfigMap: 미리 Trial Template 을 Configmap 에 등록한 경우 사용
+    - Trial Template YAML 의 변수를 6. Hyper parameters 단계 에서 설정한 값으로 입력
+      - learingRate: lr
+      - numberLayers: num-layers
+      - optimizer: optimizer
 
 CREATE 클릭하여 Katib 실행
 
