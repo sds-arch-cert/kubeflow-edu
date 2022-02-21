@@ -15,3 +15,4 @@ spec:
  - name: secret-volume
    secret:
     secretName: gcp-secret
+    
