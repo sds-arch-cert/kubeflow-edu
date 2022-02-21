@@ -1,18 +1,25 @@
 apiVersion: kubeflow.org/v1alpha1
 kind: PodDefault
 metadata:
-  name: add-gcp-secret
+  name: access-ml-pipeline
   namespace: kubeflow-user-example-com
 spec:
- selector:
-  matchLabels:
-    add-gcp-secret: "true"
- desc: "add gcp credential"
- volumeMounts:
- - name: secret-volume
-   mountPath: /secret/gcp
- volumes:
- - name: secret-volume
-   secret:
-    secretName: gcp-secret
-    
+  desc: Allow access to Kubeflow Pipelines
+  env:
+  - name: KF_PIPELINES_SA_TOKEN_PATH
+    value: /var/run/secrets/kubeflow/pipelines/token
+  selector:
+    matchLabels:
+      access-ml-pipeline: "true"
+  volumeMounts:
+  - mountPath: /var/run/secrets/kubeflow/pipelines
+    name: volume-kf-pipeline-token
+    readOnly: true
+  volumes:
+  - name: volume-kf-pipeline-token
+    projected:
+      sources:
+      - serviceAccountToken:
+          audience: pipelines.kubeflow.org
+          expirationSeconds: 7200
+          path: token
