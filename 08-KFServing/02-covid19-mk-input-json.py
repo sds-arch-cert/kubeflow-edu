@@ -144,8 +144,8 @@ os.environ.update({
     'S3_VERIFY_SSL'        : '0'    # If HTTPS is used, controls if SSL should be enabled. Disable with 0.
 })  
 
-#model.save("s3://model/covid19/1")
-model.save("./covid19/1")
+model.save("s3://model/covid-19/1")
+#model.save("./covid19/1")
 
 
 # In[ ]:
