@@ -27,7 +27,8 @@ K8S_VER=v1.16.15
 #KF_VER=v1.0.2
 #KF_VER=v1.1.0
 KF_VER=v1.2.0
-CONFIG_URI=https://github.com/kubeflow/manifests/raw/master/distributions/kfdef/kfctl_k8s_istio.${KF_VER}.yaml
+#CONFIG_URI=https://github.com/kubeflow/manifests/raw/master/distributions/kfdef/kfctl_k8s_istio.${KF_VER}.yaml
+CONFIG_URI=https://raw.githubusercontent.com/kubeflow/manifests/v1.2-branch/kfdef/kfctl_k8s_istio.v1.2.0.yaml
 
 # https://github.com/kubeflow/kfctl/releases
 #KFCTL_DOWNLOSF=https://github.com/kubeflow/kfctl/releases/download/v1.0.2/kfctl_v1.0.2-0-ga476281_linux.tar.gz
