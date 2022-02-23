@@ -42,7 +42,7 @@ minioClient = Minio(
                 secure=False
             )
 
-''' Minio 접속을 위해
+''' Minio 접속을 위해 위에까지만 
 data = []
 labels = []
 
