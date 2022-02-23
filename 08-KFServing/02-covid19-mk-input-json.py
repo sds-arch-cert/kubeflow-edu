@@ -42,6 +42,7 @@ minioClient = Minio(
                 secure=False
             )
 
+''' Minio 접속을 위해
 data = []
 labels = []
 
@@ -156,6 +157,7 @@ print(valaccuracy)
 
 
 # In[ ]:
+'''
 
 
 
