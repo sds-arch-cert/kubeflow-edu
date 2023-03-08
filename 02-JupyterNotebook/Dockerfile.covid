@@ -1,0 +1,22 @@
+FROM gcr.io/kubeflow-images-public/tensorflow-2.1.0-notebook-gpu:1.0.0
+ 
+USER root
+ 
+# opencv에서 사용
+RUN apt-get install -y ffmpeg libsm6 libxext6
+ 
+RUN pip install --upgrade --no-cache-dir pip
+ 
+RUN pip install --upgrade --no-cache-dir \
+                ipython-sql \
+                pandas \
+                scikit-learn \
+                opencv-python \
+                matplotlib \
+                seaborn \
+                imutils
+ 
+USER jovyan
+ 
+ENTRYPOINT ["tini", "--"]
+CMD ["sh","-c", "jupyter lab --notebook-dir=/home/${NB_USER} --ip=0.0.0.0 --no-browser --allow-root --port=8888 --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.allow_origin='*' --NotebookApp.base_url=${NB_PREFIX}"]
