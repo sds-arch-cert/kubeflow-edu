@@ -5,7 +5,7 @@ USER root
 # add pubkey
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
 # opencv에서 사용
-RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6
+RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 bash-completion
 
 RUN pip install --upgrade --no-cache-dir pip
 
@@ -17,7 +17,10 @@ RUN pip install --upgrade --no-cache-dir \
                 matplotlib \
                 seaborn \
                 imutils
+# install git-lfs
+RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
 
+ENV SHELL=/bin/bash
 USER jovyan
 
 ENTRYPOINT ["tini", "--"]
