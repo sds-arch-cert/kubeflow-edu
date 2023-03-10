@@ -3,7 +3,8 @@ FROM gcr.io/kubeflow-images-public/tensorflow-2.1.0-notebook-gpu:1.0.0
 USER root
 
 # add pubkey
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
+#RUN APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE=1
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys A4B469963BF863CC
 # opencv에서 사용
 RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 bash-completion
 
@@ -19,6 +20,7 @@ RUN pip install --upgrade --no-cache-dir \
                 imutils
 # install git-lfs
 RUN curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+RUN apt-get install git-lfs && git lfs install
 
 ENV SHELL=/bin/bash
 USER jovyan
