@@ -10,7 +10,7 @@ It uses only simple multilayer perceptron network (mlp).
 
 If you want to read more about this example, visit official [incubator-mxnet](https://github.com/apache/incubator-mxnet/tree/master/example/image-classification) github repository.
 
-# 실행 준비
+# 실행 준비 (Local Kubeflow 환경에만 해당)
 
 ## Docker build
 
