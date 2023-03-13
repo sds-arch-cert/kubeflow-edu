@@ -44,10 +44,14 @@ echo '
 Covid19 데이터셋을 Minio에 업로드
 ----------------------------------------
 '
-mkBucket myminio/dataset/covid-19
-mc cp -r Covid19-X-Rays/all/ myminio/dataset/covid-19/
-rm -rf ./Covid19-X-Rays
-
+exist_dataset=$(mc ls myminio | grep dataset)
+if [ -z "$exist_dataset" ]; then
+    mkBucket myminio/dataset/covid-19
+    mc cp -r Covid19-X-Rays/all/ myminio/dataset/covid-19/
+    rm -rf ./Covid19-X-Rays
+else
+    echo Skip uploading because already dataset exists;
+fi
 
 echo '
 ========================================
