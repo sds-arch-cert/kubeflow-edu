@@ -13,23 +13,36 @@
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
-            "filename": "load_data.ipynb",
-            "runtime_image": "amancevice/pandas:1.1.1",
-            "env_vars": [
-              "DATASET_URL=https://dax-cdn.cdn.appdomain.cloud/dax-noaa-weather-data-jfk-airport/1.1.4/noaa-weather-data-jfk-airport.tar.gz"
-            ],
-            "include_subdirectories": false,
-            "outputs": [
-              "data/noaa-weather-data-jfk-airport/jfk_weather.csv"
-            ],
-            "invalidNodeError": null,
-            "dependencies": [],
+            "component_parameters": {
+              "dependencies": [],
+              "include_subdirectories": false,
+              "outputs": [
+                "data/noaa-weather-data-jfk-airport/jfk_weather.csv"
+              ],
+              "env_vars": [
+                {
+                  "env_var": "DATASET_URL",
+                  "value": "https://dax-cdn.cdn.appdomain.cloud/dax-noaa-weather-data-jfk-airport/1.1.4/noaa-weather-data-jfk-airport.tar.gz"
+                }
+              ],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "../load_data.ipynb",
+              "runtime_image": "amancevice/pandas@sha256:f74bef70689b19d3cd610ef67227fce1c9a6ed8fa950ac2aff39ce72310d5520",
+              "cpu": 1,
+              "memory": 2
+            },
+            "label": "load_data",
             "ui_data": {
               "label": "load_data",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "image": "/notebook/pjt-lecture/elyra-notebook/static/elyra/notebook.svg",
               "x_pos": 69.70574951171875,
-              "y_pos": 299.0490417480469,
-              "description": "Notebook file"
+              "y_pos": 300.0490417480469,
+              "description": "Run notebook file"
             }
           },
           "inputs": [
@@ -66,21 +79,31 @@
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
-            "filename": "Part 1 - Data Cleaning.ipynb",
-            "runtime_image": "amancevice/pandas:1.1.1",
-            "env_vars": [],
-            "include_subdirectories": false,
-            "outputs": [
-              "data/noaa-weather-data-jfk-airport/jfk_weather_cleaned.csv"
-            ],
-            "dependencies": [],
-            "invalidNodeError": null,
+            "component_parameters": {
+              "dependencies": [],
+              "include_subdirectories": false,
+              "outputs": [
+                "data/noaa-weather-data-jfk-airport/jfk_weather_cleaned.csv"
+              ],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "../Part 1 - Data Cleaning.ipynb",
+              "runtime_image": "amancevice/pandas@sha256:f74bef70689b19d3cd610ef67227fce1c9a6ed8fa950ac2aff39ce72310d5520",
+              "cpu": 1,
+              "memory": 2
+            },
+            "label": "Part 1 - Data Cleaning",
             "ui_data": {
               "label": "Part 1 - Data Cleaning",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
+              "image": "/notebook/pjt-lecture/elyra-notebook/static/elyra/notebook.svg",
               "x_pos": 331.4868469238281,
-              "y_pos": 299.0490417480469,
-              "description": "Notebook file"
+              "y_pos": 298.0490417480469,
+              "description": "Run notebook file"
             }
           },
           "inputs": [
@@ -116,19 +139,29 @@
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
-            "filename": "Part 2 - Data Analysis.ipynb",
-            "runtime_image": "amancevice/pandas:1.1.1",
-            "env_vars": [],
-            "include_subdirectories": false,
-            "dependencies": [],
-            "invalidNodeError": null,
-            "outputs": [],
+            "component_parameters": {
+              "dependencies": [],
+              "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "../Part 2 - Data Analysis.ipynb",
+              "runtime_image": "amancevice/pandas@sha256:f74bef70689b19d3cd610ef67227fce1c9a6ed8fa950ac2aff39ce72310d5520",
+              "cpu": 1,
+              "memory": 2
+            },
+            "label": "Part 2 - Data Analysis",
             "ui_data": {
               "label": "Part 2 - Data Analysis",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 645,
-              "y_pos": 221.78109741210938,
-              "description": "Notebook file"
+              "image": "/notebook/pjt-lecture/elyra-notebook/static/elyra/notebook.svg",
+              "x_pos": 646,
+              "y_pos": 222.78109741210938,
+              "description": "Run notebook file"
             }
           },
           "inputs": [
@@ -164,19 +197,29 @@
           "type": "execution_node",
           "op": "execute-notebook-node",
           "app_data": {
-            "filename": "Part 3 - Time Series Forecasting.ipynb",
-            "runtime_image": "amancevice/pandas:1.1.1",
-            "env_vars": [],
-            "include_subdirectories": false,
-            "dependencies": [],
-            "invalidNodeError": null,
-            "outputs": [],
+            "component_parameters": {
+              "dependencies": [],
+              "include_subdirectories": false,
+              "outputs": [],
+              "env_vars": [],
+              "kubernetes_pod_annotations": [],
+              "kubernetes_pod_labels": [],
+              "kubernetes_secrets": [],
+              "kubernetes_shared_mem_size": {},
+              "kubernetes_tolerations": [],
+              "mounted_volumes": [],
+              "filename": "../Part 3 - Time Series Forecasting.ipynb",
+              "cpu": 1,
+              "memory": 2,
+              "runtime_image": "amancevice/pandas@sha256:f74bef70689b19d3cd610ef67227fce1c9a6ed8fa950ac2aff39ce72310d5520"
+            },
+            "label": "Part 3 - Time Series Forecasting",
             "ui_data": {
               "label": "Part 3 - Time Series Forecasting",
-              "image": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20viewBox%3D%220%200%2022%2022%22%3E%0A%20%20%3Cg%20class%3D%22jp-icon-warn0%20jp-icon-selectable%22%20fill%3D%22%23EF6C00%22%3E%0A%20%20%20%20%3Cpath%20d%3D%22M18.7%203.3v15.4H3.3V3.3h15.4m1.5-1.5H1.8v18.3h18.3l.1-18.3z%22%2F%3E%0A%20%20%20%20%3Cpath%20d%3D%22M16.5%2016.5l-5.4-4.3-5.6%204.3v-11h11z%22%2F%3E%0A%20%20%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A",
-              "x_pos": 639.7548217773438,
+              "image": "/notebook/pjt-lecture/elyra-notebook/static/elyra/notebook.svg",
+              "x_pos": 641.7548217773438,
               "y_pos": 372.5849304199219,
-              "description": "Notebook file"
+              "description": "Run notebook file"
             }
           },
           "inputs": [
@@ -221,6 +264,7 @@
               "content": "Download the JFK Weather dataset archive and extract it",
               "associated_id_refs": [
                 {
+                  "id": "1a57e6c6-519e-4b36-aa3a-9eac4a4e813b",
                   "node_ref": "c88d9c0b-a5d5-45ab-88d6-eb6ce24ffdbb",
                   "class_name": "d3-comment-link"
                 }
@@ -236,6 +280,7 @@
               "content": "Clean the dataset",
               "associated_id_refs": [
                 {
+                  "id": "ec540982-6c64-4b03-b7b8-39f79ffbfd08",
                   "node_ref": "e07e1b7f-568b-4bc3-9fc6-da372fd58daf",
                   "class_name": "d3-comment-link"
                 }
@@ -251,6 +296,7 @@
               "content": " Analyze the dataset",
               "associated_id_refs": [
                 {
+                  "id": "169dc3c3-2c22-41d4-a25e-884f3612f9d4",
                   "node_ref": "982e672a-4ae5-4608-bcb0-ce309868415a",
                   "class_name": "d3-comment-link"
                 }
@@ -266,6 +312,7 @@
               "content": "Explore approaches to predicting future temperatures ",
               "associated_id_refs": [
                 {
+                  "id": "c74865fb-127f-40f1-8ae9-ad5a786bfdee",
                   "node_ref": "b00e4654-a2b0-417c-8f93-8a03bec95945",
                   "class_name": "d3-comment-link"
                 }
@@ -273,7 +320,21 @@
             }
           ]
         },
-        "version": 3
+        "version": 8,
+        "properties": {
+          "name": "analyze_NOAA_weather_data",
+          "runtime": "Generic",
+          "pipeline_defaults": {
+            "mounted_volumes": [],
+            "kubernetes_pod_annotations": [],
+            "kubernetes_pod_labels": [],
+            "kubernetes_tolerations": [],
+            "kubernetes_shared_mem_size": {},
+            "env_vars": [],
+            "kubernetes_secrets": [],
+            "disable_node_caching": "True"
+          }
+        }
       },
       "runtime_ref": ""
     }
